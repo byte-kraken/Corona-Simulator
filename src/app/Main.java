@@ -17,11 +17,8 @@ public class Main extends Application {
         primaryStage.setTitle("Main Menu");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-        // Controller cannot use parameters because load uses empty constructor. Stages have to be set afterwards, sadly.
-        mainMenuController.setSinglePlayerStage(primaryStage);
-        mainMenuController.setMultiPlayerStage(primaryStage);
-        mainMenuController.setLevelEditorStage(primaryStage);
-
+        // Controller cannot use parameters because load uses empty constructor. Scenes have to be loaded in afterwards, sadly.
+        mainMenuController.loadMainMenuButtons(primaryStage);
     }
 
 

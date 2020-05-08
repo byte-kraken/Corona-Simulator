@@ -1,31 +1,41 @@
 package app;
 
+import app.model.Model;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import app.model.Model;
 
 import java.io.IOException;
 
 public class MainMenuController {
 
-    private Model model;
+    private final Model model;
 
     //private Fields can be read by FXML-File if annotated like this
     @FXML
     private Button singlePlayerButton;
     @FXML
-    private Button worldBuilderButton;
+    private Button levelEditorButton;
     @FXML
-    private Button multiplayerButton;
+    private Button multiPlayerButton;
     @FXML
     private Button exitButton;
 
+
     public MainMenuController() { //loaded on startup
         model = new Model();
+    }
+
+
+    void loadMainMenuButtons(Stage primaryStage) {
+        setSinglePlayerMainScene(primaryStage);
+        //setMultiPlayerScene(primaryStage);
+        //setLevelEditorScene(primaryStage);
+
+        exitButton.setOnAction(event -> primaryStage.close());
     }
 
     @FXML //loaded on startup
@@ -33,36 +43,39 @@ public class MainMenuController {
 
     }
 
-    void setSinglePlayerStage(Stage primaryStage) {
+    private void setSinglePlayerMainScene(Stage primaryStage) {
         singlePlayerButton.setOnAction(event -> {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("singlePlayer.fxml"));
-            final Stage singlePlayerStage = new Stage();
-            //singlePlayerStage.initModality(Modality.APPLICATION_MODAL);
-            Parent root;
-            try {
-                root = loader.load();
-            } catch (IOException e) {
-                throw new RuntimeException("We are fucked.", e);
-            }
-            SinglePlayerController singleplayerController = loader.getController();
-            singleplayerController.setPrimaryStage(primaryStage);
-            singleplayerController.setSinglePlayerStage(singlePlayerStage);
-            singlePlayerStage.setTitle("Single Player");
-            singlePlayerStage.setScene(new Scene(root));
-            singlePlayerStage.show();
-            primaryStage.hide();
-            //TODO: Only use one stage and various scenes?
-            //TODO: Level-Select for SinglePlayer
-            //TODO: Resources Folder where own levels can be saved and ours can be loaded from
+            //TODO: Level-Select for SinglePlayer using JDBC
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("singlePlayerMainUI.fxml"));
+            loadScene(loader, primaryStage);
         });
-        exitButton.setOnAction(event -> primaryStage.close());
     }
 
-    public void setMultiPlayerStage(Stage primaryStage) {
-        //TODO
+    private void setMultiPlayerScene(Stage primaryStage) {
+        multiPlayerButton.setOnAction(event -> {
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("multiPlayerUI.fxml"));
+            loadScene(loader, primaryStage);
+        });
+
+        //TODO: implement
     }
 
-    public void setLevelEditorStage(Stage primaryStage) {
-        //TODO
+    private void setLevelEditorScene(Stage primaryStage) {
+        //TODO: Resources Folder where own levels can be saved and own ones can be loaded from
+    }
+
+    private void loadScene(FXMLLoader loader, Stage primaryStage) {
+        Parent root;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException("Error loading FXML-File.", e);
+        }
+        Controller controller = loader.getController();
+        controller.setModel(model);
+        controller.setPrimaryStage(primaryStage);
+        Scene previousScene = primaryStage.getScene();
+        controller.setPreviousScene(previousScene);
+        primaryStage.setScene(new Scene(root));
     }
 }

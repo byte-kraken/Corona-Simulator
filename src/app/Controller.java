@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 
 
 /**
- * Superclass for the different Controllers diverting from MainMenuController such as
+ * Superclass for the different controllers branching from main controller {@link MainMenuController} such as
  * {@link MultiPlayerController} and {@link SinglePlayerMainController}.
  * <p>
  * FXML elements cannot be generalised, sadly.

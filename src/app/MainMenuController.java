@@ -10,6 +10,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Controls the Main Menu and initializes the model.
+ * <p>
+ * From here, all other scenes are created with their respective controllers and appearances.
+ */
 public class MainMenuController {
 
     private final Model model;
@@ -29,7 +34,6 @@ public class MainMenuController {
         model = new Model();
     }
 
-
     void loadMainMenuButtons(Stage primaryStage) {
         setSinglePlayerMainScene(primaryStage);
         //setMultiPlayerScene(primaryStage);
@@ -43,6 +47,9 @@ public class MainMenuController {
 
     }
 
+    /**
+     * Loads the SinglePlayerButton and initializes the singlePlayerScene using {@link SinglePlayerMainController}.
+     */
     private void setSinglePlayerMainScene(Stage primaryStage) {
         singlePlayerButton.setOnAction(event -> {
             //TODO: Level-Select for SinglePlayer using JDBC
@@ -51,8 +58,12 @@ public class MainMenuController {
         });
     }
 
+    /**
+     * Loads the multiPlayerButton and initializes the multiPlayerScene using {@link MultiPlayerController}.
+     */
     private void setMultiPlayerScene(Stage primaryStage) {
         multiPlayerButton.setOnAction(event -> {
+            //TODO: Implement multiPlayerUI.fxml
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("multiPlayerUI.fxml"));
             loadScene(loader, primaryStage);
         });
@@ -60,10 +71,23 @@ public class MainMenuController {
         //TODO: implement
     }
 
+    /**
+     * Loads the levelEditorButton and initializes the levelEditorScene using {@link LevelEditorController}.
+     */
     private void setLevelEditorScene(Stage primaryStage) {
+        levelEditorButton.setOnAction(event -> {
+            //TODO: Implement levelEditorUI.fxml
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("levelEditorUI.fxml"));
+            loadScene(loader, primaryStage);
+        });
         //TODO: Resources Folder where own levels can be saved and own ones can be loaded from
     }
 
+    /**
+     * Does everything a normal constructor would do.
+     * <p>
+     * Helper method for creating various scenes and passing required parameters.
+     */
     private void loadScene(FXMLLoader loader, Stage primaryStage) {
         Parent root;
         try {

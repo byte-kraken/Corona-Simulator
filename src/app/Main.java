@@ -6,14 +6,22 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+
+/**
+ * The main class of the application.
+ */
 public class Main extends Application {
 
+    /**
+     * Loads constructor of Controller defined in .fxml-file and runs initialize().
+     *
+     * @param primaryStage: Root stage loaded from {@link Application}. Other stages may be set on top of it.
+     */
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("mainMenuUI.fxml"));
         final Parent root = loader.load();
         MainMenuController mainMenuController = loader.getController();
-        // loads Controller constructor defined in .fxml-file and runs initialize()
         primaryStage.setTitle("Main Menu");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

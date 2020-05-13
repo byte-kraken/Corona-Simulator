@@ -10,5 +10,13 @@ package app.model;
  * Should be combined with JDBC if data needs to be consistent.
  */
 public class Model {
+    private int nrInfected = 0;
 
+    public int getNrInfected() {
+        return nrInfected;
+    }
+
+    public void setNrInfected(int nrInfected) {
+        this.nrInfected = nrInfected;
+    }
 }

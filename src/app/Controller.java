@@ -13,12 +13,16 @@ import javafx.stage.Stage;
  */
 class Controller {
 
-    Stage primaryStage;
-    Scene previousScene;
+    private Stage primaryStage;
+    private Scene previousScene;
     Model model;
 
     void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     void setPreviousScene(Scene previousScene) {
@@ -27,5 +31,9 @@ class Controller {
 
     void setModel(Model model) {
         this.model = model;
+    }
+
+    void returnToPreviousScene() {
+        primaryStage.setScene(previousScene);
     }
 }

@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -30,20 +31,26 @@ public class MainMenuController {
     private Button exitButton;
 
 
-    public MainMenuController() { //loaded on startup
+    public MainMenuController() { //loaded from FXMLLoader
         model = new Model();
     }
 
-    void loadMainMenuButtons(Stage primaryStage) {
+    void armMainMenuButtons(Stage primaryStage) {
         setSinglePlayerMainScene(primaryStage);
         //setMultiPlayerScene(primaryStage);
         //setLevelEditorScene(primaryStage);
 
-        exitButton.setOnAction(event -> primaryStage.close());
+        exitButton.setOnAction(event -> closeStage(primaryStage));
+
+        primaryStage.getScene().setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                closeStage(primaryStage);
+            }
+        });
     }
 
-    @FXML //loaded on startup
-    private void initialize() {
+    @FXML
+    private void initialize() { //loaded from FXMLLoader
 
     }
 
@@ -52,9 +59,10 @@ public class MainMenuController {
      */
     private void setSinglePlayerMainScene(Stage primaryStage) {
         singlePlayerButton.setOnAction(event -> {
-            //TODO: Level-Select for SinglePlayer using JDBC
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("singlePlayerMainUI.fxml"));
             loadScene(loader, primaryStage);
+            SinglePlayerMainController controller = loader.getController();
+            controller.armVirus(); //virus has to be loaded after scene was created
         });
     }
 
@@ -101,5 +109,9 @@ public class MainMenuController {
         Scene previousScene = primaryStage.getScene();
         controller.setPreviousScene(previousScene);
         primaryStage.setScene(new Scene(root));
+    }
+
+    private void closeStage(Stage primaryStage) {
+        primaryStage.close();
     }
 }

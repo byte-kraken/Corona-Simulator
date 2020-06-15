@@ -38,7 +38,7 @@ public class MainMenuController {
     void armMainMenuButtons(Stage primaryStage) {
         setSinglePlayerMainScene(primaryStage);
         //setMultiPlayerScene(primaryStage);
-        //setLevelEditorScene(primaryStage);
+        setLevelEditorScene(primaryStage);
 
         exitButton.setOnAction(event -> closeStage(primaryStage));
 
@@ -61,6 +61,7 @@ public class MainMenuController {
         singlePlayerButton.setOnAction(event -> {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("singlePlayerMainUI.fxml"));
             loadScene(loader, primaryStage);
+            primaryStage.setTitle("Corona Simulator");
             SinglePlayerMainController controller = loader.getController();
             controller.armVirus(); //virus has to be loaded after scene was created
         });
@@ -84,9 +85,11 @@ public class MainMenuController {
      */
     private void setLevelEditorScene(Stage primaryStage) {
         levelEditorButton.setOnAction(event -> {
-            //TODO: Implement levelEditorUI.fxml
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("levelEditorUI.fxml"));
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("levelEditor.fxml"));
             loadScene(loader, primaryStage);
+            primaryStage.setTitle("World Builder");
+            LevelEditorController controller = loader.getController();
+            controller.armCanvas(); //canvas has to be loaded after scene was created
         });
         //TODO: Resources Folder where own levels can be saved and own ones can be loaded from
     }

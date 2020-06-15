@@ -18,12 +18,12 @@ import javafx.util.Duration;
 public class SinglePlayerMainController extends Controller {
 
     private static final double VIRUS_MOVEMENT_ANIMATION_DURATION = 0.25; //determines smoothness of animation when moving
+    private static final int VIRUS_MOVEMENT_PER_TRIGGER = 5; //determines how many points in x/y coords the virus should move when triggered
+    private static final double VIRUS_RADIUS = 50; //determines virus radius
     @FXML
     private Label nrInfectedLabel;
     @FXML
     private Button toMainMenuButton;
-    private static final int VIRUS_MOVEMENT_PER_TRIGGER = 5; //determines how many points in x/y coords the virus should move when triggered
-    private static final double VIRUS_RADIUS = 50; //determines virus radius
     @FXML
     private Circle virusCircle;
 

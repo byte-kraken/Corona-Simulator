@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="app.LevelEditorController">
+    <VBox prefHeight="400.0" prefWidth="600.0">
+        <Canvas fx:id="paintCanvas" height="375.0" width="600.0"/>
+        <HBox alignment="BOTTOM_CENTER" prefHeight="20.0" prefWidth="600.0">
+            <Button fx:id="wallColorButton" mnemonicParsing="false" text="Wall"/>
+            <Button fx:id="voidColorButton" mnemonicParsing="false" text="Air"/>
+            <Button fx:id="npcColorButton" mnemonicParsing="false" text="NPC"/>
+            <Button fx:id="virusColorButton" mnemonicParsing="false" text="Virus"/>
+            <Label fx:id="label"/>
+            <Button fx:id="saveButton" mnemonicParsing="false" text="Export Picture" textAlignment="CENTER"/>
+            <Button fx:id="toMainMenuButton" cancelButton="true" mnemonicParsing="false" text="Cancel"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

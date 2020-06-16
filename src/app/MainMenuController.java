@@ -1,6 +1,8 @@
 package app;
 
+import app.classes.Map;
 import app.model.Model;
+import app.model.SinglePlayerModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -63,7 +65,14 @@ public class MainMenuController {
             loadScene(loader, primaryStage);
             primaryStage.setTitle("Corona Simulator");
             SinglePlayerMainController controller = loader.getController();
-            controller.armVirus(); //virus has to be loaded after scene was created
+            SinglePlayerModel standardTestModel = new SinglePlayerModel();
+            standardTestModel.loadEntitiesFromMapInModel(Map.getStandardTestMap());
+            controller.setKeyEventHandler();
+            controller.setSinglePlayerModel(standardTestModel);
+            controller.initStartScreen();
+
+
+
         });
     }
 
@@ -107,7 +116,7 @@ public class MainMenuController {
             throw new RuntimeException("Error loading FXML-File.", e);
         }
         Controller controller = loader.getController();
-        controller.setModel(model);
+        controller.setGlobalModel(model);
         controller.setPrimaryStage(primaryStage);
         Scene previousScene = primaryStage.getScene();
         controller.setPreviousScene(previousScene);

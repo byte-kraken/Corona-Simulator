@@ -6,41 +6,32 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/11.0.1" fx:controller="app.SinglePlayerMainController">
-    <VBox prefHeight="200.0" prefWidth="100.0">
-        <Pane prefHeight="200.0" prefWidth="200.0">
-            <Circle fx:id="virusCircle" fill="DODGERBLUE" layoutX="76.0" layoutY="76.0" radius="24.0" stroke="BLACK"
-                    strokeType="INSIDE"/>
-        </Pane>
-        <Canvas height="336.0" width="598.0"/>
-        <HBox prefHeight="119.0" prefWidth="600.0">
-            <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="119.0" prefWidth="351.0"
-                   text="Infected:" textAlignment="CENTER">
-                <font>
-                    <Font size="32.0"/>
-                </font>
-                <opaqueInsets>
-                    <Insets/>
-                </opaqueInsets>
-                <padding>
-                    <Insets right="20.0"/>
-                </padding>
-            </Label>
-            <Label fx:id="nrInfectedLabel" prefHeight="121.0" prefWidth="73.0" text="0">
-                <font>
-                    <Font size="32.0"/>
-                </font>
-            </Label>
-            <Button fx:id="toMainMenuButton" mnemonicParsing="false" prefHeight="119.0" prefWidth="188.0" text="Cancel">
-                <font>
-                    <Font name="System Bold" size="27.0"/>
-                </font>
-            </Button>
-        </HBox>
-    </VBox>
+
+<AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0"  xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.SinglePlayerMainController">
+   <Canvas height="1080.0" width="1920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+     <Canvas fx:id="gameCanvas" height="1033.0" layoutX="40.0" layoutY="23.0" width="1840.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="23.0" />
+     <HBox prefHeight="119.0" prefWidth="428.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+         <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="119.0" prefWidth="151.0" text="Infected:" textAlignment="CENTER">
+             <font>
+                 <Font size="32.0" />
+             </font>
+             <opaqueInsets>
+                 <Insets />
+             </opaqueInsets>
+             <padding>
+                 <Insets right="20.0" />
+             </padding>
+         </Label>
+         <Label fx:id="nrInfectedLabel" prefHeight="121.0" prefWidth="73.0" text="0">
+             <font>
+                 <Font size="32.0" />
+             </font>
+         </Label>
+         <Button fx:id="toMainMenuButton" mnemonicParsing="false" prefHeight="119.0" prefWidth="188.0" text="Cancel">
+             <font>
+                 <Font name="System Bold" size="27.0" />
+             </font>
+         </Button>
+     </HBox>
 </AnchorPane>

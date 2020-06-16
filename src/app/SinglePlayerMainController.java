@@ -1,14 +1,28 @@
 package app;
 
-import javafx.animation.TranslateTransition;
+import app.classes.gameEntitys.NPC;
+import app.classes.gameEntitys.Wall;
+import app.exceptions.KeyEventhandlerNotSetException;
+import app.exceptions.ModelNotSetException;
+import app.model.SinglePlayerModel;
+import javafx.animation.AnimationTimer;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.stage.Screen;
-import javafx.util.Duration;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ResourceBundle;
 
 /**
  * Controller {@link Controller} for the SinglePlayerMode.
@@ -16,122 +30,214 @@ import javafx.util.Duration;
  * Controls the virus, NPCs and the main logic.
  */
 public class SinglePlayerMainController extends Controller {
+    /**
+     * FXMl Fields
+     */
 
-    private static final double VIRUS_MOVEMENT_ANIMATION_DURATION = 0.25; //determines smoothness of animation when moving
+    @FXML
+    private ResourceBundle resources;
+
+    @FXML
+    private URL location;
+
+    @FXML
+    private AnchorPane mainAnchorPane;
+
     @FXML
     private Label nrInfectedLabel;
+
     @FXML
     private Button toMainMenuButton;
-    private static final int VIRUS_MOVEMENT_PER_TRIGGER = 5; //determines how many points in x/y coords the virus should move when triggered
-    private static final double VIRUS_RADIUS = 50; //determines virus radius
+
     @FXML
-    private Circle virusCircle;
+    private Canvas gameCanvas;
+
+    /**
+     * FXM Fields End
+     */
+    /**
+     * Regular fields
+     */
+
+    /**
+     * Input Buffer
+     */
+    private ArrayList<String> input;
+
+    private SinglePlayerModel siPModel;
+    private boolean modelSet = false;
+
+    private boolean keyEventHandlerSet = false;
+
+    private boolean gameStarted = false;
+
 
     public SinglePlayerMainController() {
         super();
     }
 
     public void initialize() {
+
+        /**
+         * Assertions
+         */
+
+        assert mainAnchorPane != null : "fx:id=\"mainAnchorPane\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
+        assert nrInfectedLabel != null : "fx:id=\"nrInfectedLabel\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
+        assert toMainMenuButton != null : "fx:id=\"toMainMenuButton\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
+        assert gameCanvas != null : "fx:id=\"gameCanvas\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
+
+        /**
+         * Assertions End
+         */
+        /**
+         * Regular fields initialization
+         */
+
+        input = new ArrayList<String>();
+
+        /**
+         * Regular fields initialization End
+         */
+
+        /**
+         * Action Handlers
+         */
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
         toMainMenuButton.setFocusTraversable(false); //needs to be set for all focusable elements in the scene, otherwise key detection does not work
+
+
+        /**
+         * Action Handlers END
+         */
     }
 
-    public void armVirus() { //Virus should maybe be an own class.
-        //TODO: initialize proper design in FXML-File
-        //TODO: initialize proper starting location based on map
-        virusCircle.setCenterX(200); //placeholder
-        virusCircle.setCenterY(150); //placeholder
-        virusCircle.setRadius(VIRUS_RADIUS); //placeholder
-        virusCircle.setFill(Color.GREEN); //placeholder
-        virusCircle.setStroke(Color.GREEN); //placeholder
-
-        final TranslateTransition transition = new TranslateTransition(Duration.seconds(VIRUS_MOVEMENT_ANIMATION_DURATION), virusCircle); //responsible for smooth animation
-        transition.setOnFinished(actionEvent -> {
-            virusCircle.setCenterX(virusCircle.getTranslateX() + virusCircle.getCenterX());
-            virusCircle.setCenterY(virusCircle.getTranslateY() + virusCircle.getCenterY());
-            virusCircle.setTranslateX(0);
-            virusCircle.setTranslateY(0);
-        });
-
-        virusCircle.requestFocus(); //required to enable keyPressDetection
-        handleVirusKeyPresses(getPrimaryStage().getScene(), virusCircle);
-
-        nrInfectedLabel.setText(String.valueOf(model.getNrInfected())); //placeholder
-    }
-
-    private void triggerInfect(Scene currentScene, Circle virus) {
-        //TODO: Infection logic
-        //placeholder
-        if (!model.isInfectionStarted()) {
-            System.out.println("Starting infection.");
-            model.setInfectionStarted(true);
-        }
-        model.setNrInfected(model.getNrInfected() + 1);
-        nrInfectedLabel.setText(String.valueOf(model.getNrInfected()));
-    }
-
-    private void handleVirusKeyPresses(Scene currentScene, Circle virus) {
-        currentScene.setOnKeyPressed(actionEvent -> {
-            double proposedX, proposedY;
-            switch (actionEvent.getCode()) {
-                case W:
-                case UP:
-                    proposedX = virus.getCenterX();
-                    proposedY = virus.getCenterY() - VIRUS_MOVEMENT_PER_TRIGGER;
-                    if (checkPositionValid(proposedX, proposedY, VIRUS_RADIUS, VIRUS_RADIUS)) {
-                        virus.setCenterX(proposedX);
-                        virus.setCenterY(proposedY);
-                    }
-                    break;
-                case S:
-                case DOWN:
-                    proposedX = virus.getCenterX();
-                    proposedY = virus.getCenterY() + VIRUS_MOVEMENT_PER_TRIGGER;
-                    if (checkPositionValid(proposedX, proposedY, VIRUS_RADIUS, VIRUS_RADIUS)) {
-                        virus.setCenterX(proposedX);
-                        virus.setCenterY(proposedY);
-                    }
-                    break;
-                case A:
-                case LEFT:
-                    proposedX = virus.getCenterX() - VIRUS_MOVEMENT_PER_TRIGGER;
-                    proposedY = virus.getCenterY();
-                    if (checkPositionValid(proposedX, proposedY, VIRUS_RADIUS, VIRUS_RADIUS)) {
-                        virus.setCenterX(proposedX);
-                        virus.setCenterY(proposedY);
-                    }
-                    break;
-                case D:
-                case RIGHT:
-                    proposedX = virus.getCenterX() + VIRUS_MOVEMENT_PER_TRIGGER;
-                    proposedY = virus.getCenterY();
-                    if (checkPositionValid(proposedX, proposedY, VIRUS_RADIUS, VIRUS_RADIUS)) {
-                        virus.setCenterX(proposedX);
-                        virus.setCenterY(proposedY);
-                    }
-                    break;
-                case SPACE:
-                    triggerInfect(currentScene, virus);
-                    break;
-                case ESCAPE:
-                    returnToPreviousScene();
-                    break;
+    public void setKeyEventHandler() {
+        getPrimaryStage().getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                String code = keyEvent.getCode().toString();
+                if (!input.contains(code))
+                    input.add(code);
             }
         });
+
+
+        getPrimaryStage().getScene().setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                String code = keyEvent.getCode().toString();
+                input.remove(code);
+            }
+        });
+        getPrimaryStage().getScene().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.SPACE) {
+                if (!gameStarted) {
+                    startGame();
+                }
+            }
+        });
+
+        keyEventHandlerSet = true;
     }
 
-    private boolean checkPositionValid(double x, double y, double width, double height) {
-        //System.out.format("Current x: %s, y: %s (Radius: %s); Borders width: %s, height: %s\n", x, y, width, primaryStage.getScene().getWidth(), primaryStage.getScene().getHeight());
-        return checkPositionInBound(x, y, width, height) && checkPositionNoWall(x, y, width, height);
+
+    public void setSinglePlayerModel(SinglePlayerModel singlePlayerModel) {
+        this.siPModel = singlePlayerModel;
+        modelSet = true;
     }
 
-    private boolean checkPositionInBound(double x, double y, double width, double height) {
-        double screenWidth = Screen.getPrimary().getVisualBounds().getWidth(); //TODO: Instead of using the screen's dimensions, the playingField's should be used
-        double screenHeight = Screen.getPrimary().getVisualBounds().getWidth();
-        return (x - width >= 0 && x + width <= screenWidth && y - height >= 0 && y + height <= screenHeight);
+    public void initStartScreen() {
+        if (!keyEventHandlerSet) {
+            throw new KeyEventhandlerNotSetException();
+        }
+
+        if (!modelSet) {
+            throw new ModelNotSetException();
+        }
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+
+        Font theFont = Font.font("Helvetica", FontWeight.BOLD, 24);
+        gc.setFont(theFont);
+        gc.setFill(Color.GREEN);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(1);
+
+        gc.fillText("Press Space to start the game", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) - 50);
+
+
     }
 
-    private boolean checkPositionNoWall(double x, double y, double width, double height) {
-        return true; //TODO: Read map and create method to check for wall at coords.
+
+    public void startGame() throws ModelNotSetException, KeyEventhandlerNotSetException {
+
+        gameStarted = true;
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
+
+        final Long[] lastNanoTime = {System.nanoTime()};
+
+        new AnimationTimer() {
+
+            @Override
+            public void handle(long currentNanoTime) {
+                double elapsedTime = (currentNanoTime - lastNanoTime[0]) / 1000000000.0;
+                lastNanoTime[0] = currentNanoTime;
+
+                siPModel.getPlayer().setVelocity(0, 0);
+                if (input.contains("LEFT"))
+                    siPModel.getPlayer().addVelocity(-100, 0);
+                if (input.contains("RIGHT"))
+                    siPModel.getPlayer().addVelocity(100, 0);
+                if (input.contains("UP"))
+                    siPModel.getPlayer().addVelocity(0, -100);
+                if (input.contains("DOWN"))
+                    siPModel.getPlayer().addVelocity(0, 100);
+
+                siPModel.getPlayer().update(elapsedTime);
+                //TODO Collision Detection Properly
+                Iterator<Wall> wallIter = siPModel.getWall_Iterator();
+                while (wallIter.hasNext()) {
+                    Wall wall = wallIter.next();
+                    if (wall.intersects(siPModel.getPlayer())) {
+                        siPModel.getPlayer().wallCollision(elapsedTime);
+                    }
+//                    System.out.println(wall.toString());
+                }
+
+
+                //TODO END
+                gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
+
+                siPModel.getPlayer().render(gc);
+
+                gc.fillText("100", 100, 100);
+                gc.fillText("200", 200, 200);
+                gc.fillText("500", 500, 500);
+                gc.fillText("500x", 500, 100);
+                gc.fillText("500y", 100, 500);
+                gc.fillText("1000", 1000, 1000);
+                gc.fillText("1000x", 1000, 100);
+                gc.fillText("1000x", 100, 1000);
+
+
+                wallIter = siPModel.getWall_Iterator();
+                while (wallIter.hasNext()) {
+                    Wall wall = wallIter.next();
+                    wall.render(gc);
+//                    System.out.println(wall.toString());
+                }
+
+                Iterator<NPC> npcIterator = siPModel.getNPC_Iterator();
+                while (npcIterator.hasNext()) {
+                    NPC npc = npcIterator.next();
+                    npc.render(gc);
+//
+                }
+
+
+            }
+        }.start();
+
     }
 }

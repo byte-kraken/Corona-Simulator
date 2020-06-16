@@ -5,40 +5,40 @@
 <?import javafx.scene.text.Font?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" alignment="center" hgap="10" vgap="10"
           xmlns="http://javafx.com/javafx/11.0.1" fx:controller="app.MainMenuController">
-   <columnConstraints>
-      <ColumnConstraints/>
-      <ColumnConstraints/>
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints/>
-      <RowConstraints/>
-      <RowConstraints/>
-      <RowConstraints/>
-   </rowConstraints>
-   <VBox alignment="CENTER" prefWidth="309.0" GridPane.valignment="CENTER">
-      <Button fx:id="singlePlayerButton" alignment="CENTER" contentDisplay="CENTER" minHeight="200.0"
-              minWidth="300.0" mnemonicParsing="false" text="Single Player" textAlignment="CENTER">
-         <font>
-            <Font size="30.0"/>
-         </font>
-      </Button>
-      <Button fx:id="multiPlayerButton" alignment="CENTER" contentDisplay="CENTER" minHeight="200.0"
-              minWidth="300.0" mnemonicParsing="false" text="Multiplayer" textAlignment="CENTER">
-         <font>
-            <Font size="30.0"/>
-         </font>
-      </Button>
-      <Button fx:id="levelEditorButton" alignment="CENTER" contentDisplay="CENTER" minHeight="200.0"
-              minWidth="300.0" mnemonicParsing="false" text="World Builder" textAlignment="CENTER">
-         <font>
-            <Font size="30.0"/>
-         </font>
-      </Button>
-      <Button fx:id="exitButton" cancelButton="true" minHeight="200.0" minWidth="300.0" mnemonicParsing="false"
-              text="Exit Game">
-         <font>
-            <Font size="30.0"/>
-         </font>
-      </Button>
-   </VBox>
+    <columnConstraints>
+        <ColumnConstraints/>
+        <ColumnConstraints/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+        <RowConstraints/>
+    </rowConstraints>
+    <VBox alignment="CENTER" prefWidth="309.0" GridPane.valignment="CENTER">
+        <Button fx:id="singlePlayerButton" alignment="CENTER" contentDisplay="CENTER" minHeight="200.0"
+                minWidth="300.0" mnemonicParsing="false" text="Single Player" textAlignment="CENTER">
+            <font>
+                <Font size="30.0"/>
+            </font>
+        </Button>
+        <Button fx:id="multiPlayerButton" alignment="CENTER" contentDisplay="CENTER" minHeight="200.0"
+                minWidth="300.0" mnemonicParsing="false" text="Multiplayer" textAlignment="CENTER">
+            <font>
+                <Font size="30.0"/>
+            </font>
+        </Button>
+        <Button fx:id="worldBuilderButton" alignment="CENTER" contentDisplay="CENTER" minHeight="200.0"
+                minWidth="300.0" mnemonicParsing="false" text="World Builder" textAlignment="CENTER">
+            <font>
+                <Font size="30.0"/>
+            </font>
+        </Button>
+        <Button fx:id="exitButton" cancelButton="true" minHeight="200.0" minWidth="300.0" mnemonicParsing="false"
+                text="Exit Game">
+            <font>
+                <Font size="30.0"/>
+            </font>
+        </Button>
+    </VBox>
 </GridPane>

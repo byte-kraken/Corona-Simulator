@@ -62,7 +62,7 @@ public class SinglePlayerMainController extends Controller {
     /**
      * Input Buffer
      */
-    private ArrayList<String> input ;
+    private ArrayList<String> input;
 
     private SinglePlayerModel siPModel;
     private boolean modelSet = false;
@@ -107,20 +107,18 @@ public class SinglePlayerMainController extends Controller {
         toMainMenuButton.setFocusTraversable(false); //needs to be set for all focusable elements in the scene, otherwise key detection does not work
 
 
-
-
         /**
          * Action Handlers END
          */
     }
 
-    public void setKeyEventHandler(){
+    public void setKeyEventHandler() {
         getPrimaryStage().getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
                 String code = keyEvent.getCode().toString();
-                if ( !input.contains(code) )
-                    input.add( code );
+                if (!input.contains(code))
+                    input.add(code);
             }
         });
 
@@ -129,12 +127,12 @@ public class SinglePlayerMainController extends Controller {
             @Override
             public void handle(KeyEvent keyEvent) {
                 String code = keyEvent.getCode().toString();
-                input.remove( code );
+                input.remove(code);
             }
         });
         getPrimaryStage().getScene().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
-            if(keyEvent.getCode()== KeyCode.SPACE){
-                if(!gameStarted){
+            if (keyEvent.getCode() == KeyCode.SPACE) {
+                if (!gameStarted) {
                     startGame();
                 }
             }
@@ -144,102 +142,98 @@ public class SinglePlayerMainController extends Controller {
     }
 
 
-    public void setSinglePlayerModel(SinglePlayerModel singlePlayerModel){
+    public void setSinglePlayerModel(SinglePlayerModel singlePlayerModel) {
         this.siPModel = singlePlayerModel;
         modelSet = true;
     }
-    public void initStartScreen(){
-        if(!keyEventHandlerSet){
+
+    public void initStartScreen() {
+        if (!keyEventHandlerSet) {
             throw new KeyEventhandlerNotSetException();
         }
 
-        if(!modelSet){
+        if (!modelSet) {
             throw new ModelNotSetException();
         }
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
 
-        Font theFont = Font.font( "Helvetica", FontWeight.BOLD, 24 );
-        gc.setFont( theFont );
-        gc.setFill( Color.GREEN );
-        gc.setStroke( Color.BLACK );
+        Font theFont = Font.font("Helvetica", FontWeight.BOLD, 24);
+        gc.setFont(theFont);
+        gc.setFill(Color.GREEN);
+        gc.setStroke(Color.BLACK);
         gc.setLineWidth(1);
 
-        gc.fillText("Press Space to start the game",(gameCanvas.getWidth()/2)-100,(gameCanvas.getHeight()/2)-50);
+        gc.fillText("Press Space to start the game", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) - 50);
 
 
     }
 
 
-    public void startGame() throws ModelNotSetException,KeyEventhandlerNotSetException {
+    public void startGame() throws ModelNotSetException, KeyEventhandlerNotSetException {
 
         gameStarted = true;
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, gameCanvas.getWidth(),gameCanvas.getHeight());
+        gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
 
         final Long[] lastNanoTime = {System.nanoTime()};
 
-        new AnimationTimer(){
+        new AnimationTimer() {
 
             @Override
             public void handle(long currentNanoTime) {
                 double elapsedTime = (currentNanoTime - lastNanoTime[0]) / 1000000000.0;
                 lastNanoTime[0] = currentNanoTime;
 
-                siPModel.getPlayer().setVelocity(0,0);
+                siPModel.getPlayer().setVelocity(0, 0);
                 if (input.contains("LEFT"))
-                    siPModel.getPlayer().addVelocity(-100,0);
+                    siPModel.getPlayer().addVelocity(-100, 0);
                 if (input.contains("RIGHT"))
-                    siPModel.getPlayer().addVelocity(100,0);
+                    siPModel.getPlayer().addVelocity(100, 0);
                 if (input.contains("UP"))
-                    siPModel.getPlayer().addVelocity(0,-100);
+                    siPModel.getPlayer().addVelocity(0, -100);
                 if (input.contains("DOWN"))
-                    siPModel.getPlayer().addVelocity(0,100);
+                    siPModel.getPlayer().addVelocity(0, 100);
 
                 siPModel.getPlayer().update(elapsedTime);
                 //TODO Collision Detection Properly
                 Iterator<Wall> wallIter = siPModel.getWall_Iterator();
-                while (wallIter.hasNext()){
+                while (wallIter.hasNext()) {
                     Wall wall = wallIter.next();
-                    if(wall.intersects(siPModel.getPlayer())){
+                    if (wall.intersects(siPModel.getPlayer())) {
                         siPModel.getPlayer().wallCollision(elapsedTime);
                     }
 //                    System.out.println(wall.toString());
                 }
 
 
-
-
-
                 //TODO END
-                gc.clearRect(0, 0, gameCanvas.getWidth(),gameCanvas.getHeight());
+                gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
 
                 siPModel.getPlayer().render(gc);
 
-                gc.fillText("100",100,100);
-                gc.fillText("200",200,200);
-                gc.fillText("500",500,500);
-                gc.fillText("500x",500,100);
-                gc.fillText("500y",100,500);
-                gc.fillText("1000",1000,1000);
-                gc.fillText("1000x",1000,100);
-                gc.fillText("1000x",100,1000);
+                gc.fillText("100", 100, 100);
+                gc.fillText("200", 200, 200);
+                gc.fillText("500", 500, 500);
+                gc.fillText("500x", 500, 100);
+                gc.fillText("500y", 100, 500);
+                gc.fillText("1000", 1000, 1000);
+                gc.fillText("1000x", 1000, 100);
+                gc.fillText("1000x", 100, 1000);
 
 
                 wallIter = siPModel.getWall_Iterator();
-                while (wallIter.hasNext()){
+                while (wallIter.hasNext()) {
                     Wall wall = wallIter.next();
                     wall.render(gc);
 //                    System.out.println(wall.toString());
                 }
 
                 Iterator<NPC> npcIterator = siPModel.getNPC_Iterator();
-                while (npcIterator.hasNext()){
+                while (npcIterator.hasNext()) {
                     NPC npc = npcIterator.next();
                     npc.render(gc);
 //
                 }
-
-
 
 
             }

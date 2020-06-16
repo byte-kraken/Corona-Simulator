@@ -30,10 +30,7 @@ import java.util.ResourceBundle;
  * Controls the virus, NPCs and the main logic.
  */
 public class SinglePlayerMainController extends Controller {
-    /**
-     * FXMl Fields
-     */
-
+    //FXMl Fields
     @FXML
     private ResourceBundle resources;
 
@@ -52,16 +49,10 @@ public class SinglePlayerMainController extends Controller {
     @FXML
     private Canvas gameCanvas;
 
-    /**
-     * FXM Fields End
-     */
-    /**
-     * Regular fields
-     */
+    //FXM Fields End
+    //Regular fields
 
-    /**
-     * Input Buffer
-     */
+    //Input Buffer
     private ArrayList<String> input;
 
     private SinglePlayerModel siPModel;
@@ -78,38 +69,25 @@ public class SinglePlayerMainController extends Controller {
 
     public void initialize() {
 
-        /**
-         * Assertions
-         */
+        // Assertions Start
 
         assert mainAnchorPane != null : "fx:id=\"mainAnchorPane\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert nrInfectedLabel != null : "fx:id=\"nrInfectedLabel\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert toMainMenuButton != null : "fx:id=\"toMainMenuButton\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert gameCanvas != null : "fx:id=\"gameCanvas\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
 
-        /**
-         * Assertions End
-         */
-        /**
-         * Regular fields initialization
-         */
+        //Assertions End
+        //Regular fields initialization
 
         input = new ArrayList<String>();
 
-        /**
-         * Regular fields initialization End
-         */
+        //Regular fields initialization End
 
-        /**
-         * Action Handlers
-         */
+        //Action Handlers
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
         toMainMenuButton.setFocusTraversable(false); //needs to be set for all focusable elements in the scene, otherwise key detection does not work
 
-
-        /**
-         * Action Handlers END
-         */
+        //Action Handlers END
     }
 
     public void setKeyEventHandler() {
@@ -164,8 +142,6 @@ public class SinglePlayerMainController extends Controller {
         gc.setLineWidth(1);
 
         gc.fillText("Press Space to start the game", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) - 50);
-
-
     }
 
 

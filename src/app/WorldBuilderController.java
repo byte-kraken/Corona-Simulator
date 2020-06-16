@@ -4,10 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -26,13 +23,15 @@ import java.util.List;
  */
 public class WorldBuilderController extends Controller {
     @FXML
+    private TextField levelNameTextfield;
+    @FXML
     private CheckBox socialDistancingCheckbox;
     @FXML
     private CheckBox increasedHygieneCheckbox;
     @FXML
     private CheckBox betterMedicineCheckbox;
     @FXML
-    private Label label;
+    private Label statusLabel;
     @FXML
     private Button toMainMenuButton;
     @FXML
@@ -77,6 +76,7 @@ public class WorldBuilderController extends Controller {
     public void initialize() {
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
         wallColorButton.setOnAction(e -> color = WALL_COLOR);
+        voidColorButton.setFocusTraversable(false);
         wallColorButton.setTooltip(new Tooltip("Drag and Drop to paint a wall."));
         npcColorButton.setOnAction(e -> color = NPC_COLOR);
         npcColorButton.setTooltip(new Tooltip("Click to set NPC spawn location."));
@@ -87,11 +87,11 @@ public class WorldBuilderController extends Controller {
         saveButton.setOnAction(e -> {
             try {
                 exportSprites();
-                label.setTextFill(SUCCESSFUL_EXPORT);
-                label.setText("Successfully exported.");
+                statusLabel.setTextFill(SUCCESSFUL_EXPORT);
+                statusLabel.setText("Successfully exported.");
             } catch (IllegalStateException ex) {
-                label.setTextFill(ERRONEOUS_EXPORT);
-                label.setText(ex.getMessage());
+                statusLabel.setTextFill(ERRONEOUS_EXPORT);
+                statusLabel.setText(ex.getMessage());
             }
         });
         saveButton.setTooltip(new Tooltip("Save and export your map."));
@@ -115,7 +115,7 @@ public class WorldBuilderController extends Controller {
         graphicsContext.fillRect(0, 0, paintCanvas.getWidth(), paintCanvas.getHeight());
 
         paintCanvas.setOnMousePressed(mouseEvent -> {
-            label.setText("");
+            statusLabel.setText("");
             int subSampledX = subSample(mouseEvent.getX(), PIXEL_SIZE);
             int subSampledY = subSample(mouseEvent.getY(), PIXEL_SIZE);
             // delete shape
@@ -271,8 +271,12 @@ public class WorldBuilderController extends Controller {
         if (npcSprites.size() == 0) {
             throw new IllegalStateException("Starting location for NPCs must be set.");
         }
+        if (levelNameTextfield.getCharacters() == null || levelNameTextfield.getCharacters().equals("")) {
+            throw new IllegalStateException("Level name must be set.");
+        }
 
         // TODO: proper exporting
+        System.out.println("Level Name: " + levelNameTextfield.getCharacters());
         System.out.println("Social Distancing: " + socialDistancingCheckbox.isSelected());
         System.out.println("Increased Hygiene: " + increasedHygieneCheckbox.isSelected());
         System.out.println("Better Medicine: " + betterMedicineCheckbox.isSelected());

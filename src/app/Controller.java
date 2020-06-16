@@ -15,7 +15,7 @@ class Controller {
 
     private Stage primaryStage;
     private Scene previousScene;
-    Model model;
+    Model globalModel ;
 
     void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -29,8 +29,8 @@ class Controller {
         this.previousScene = previousScene;
     }
 
-    void setModel(Model model) {
-        this.model = model;
+    void setGlobalModel(Model globalModel) {
+        this.globalModel = globalModel;
     }
 
     void returnToPreviousScene() {

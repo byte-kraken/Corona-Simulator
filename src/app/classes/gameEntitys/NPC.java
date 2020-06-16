@@ -1,9 +1,9 @@
-package app.model.gameEntitys;
+package app.classes.gameEntitys;
 
-import app.model.gameEntitys.abstractions.MovingSprite;
+import app.classes.gameEntitys.abstractions.MovingSprite;
 import javafx.geometry.Bounds;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class NPC extends MovingSprite {
@@ -11,12 +11,15 @@ public class NPC extends MovingSprite {
     private Circle npcChar;
 
     public NPC(double positionX, double positionY) {
+
         super(positionX, positionY);
+        npcChar= new Circle(positionX,positionY,50);
     }
 
     @Override
     public void render(GraphicsContext gc) {
-
+        gc.setFill(Color.GREEN);
+        gc.fillOval(npcChar.getCenterX(), npcChar.getCenterY(), npcChar.getRadius(), npcChar.getRadius());
     }
 
     @Override

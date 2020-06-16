@@ -1,7 +1,6 @@
-package app.model.gameEntitys;
+package app.classes.gameEntitys;
 
-import app.model.gameEntitys.abstractions.MovingSprite;
-import app.model.gameEntitys.abstractions.SpriteInterface;
+import app.classes.gameEntitys.abstractions.MovingSprite;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -13,6 +12,18 @@ public class PlayerChar extends MovingSprite {
 
     public PlayerChar(double positionX, double positionY) {
         super(positionX, positionY);
+        player = new Circle(positionX,positionY,50);
+    }
+
+    public void wallCollision(double time){
+        update(time*-1);
+    }
+
+    @Override
+    public void update(double time) {
+        super.update(time);
+        player.setCenterX(positionX);
+        player.setCenterY(positionY);
     }
 
     @Override
@@ -23,7 +34,8 @@ public class PlayerChar extends MovingSprite {
 
     @Override
     public Bounds[] getBoundaries() {
-        return new Bounds[]{player.getBoundsInLocal()};
+        return new Bounds[]{
+                player.getBoundsInLocal()};
     }
 
 

@@ -5,7 +5,9 @@ import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -23,6 +25,12 @@ import java.util.List;
  * @author Felix Ferchhumer
  */
 public class WorldBuilderController extends Controller {
+    @FXML
+    private CheckBox socialDistancingCheckbox;
+    @FXML
+    private CheckBox increasedHygieneCheckbox;
+    @FXML
+    private CheckBox betterMedicineCheckbox;
     @FXML
     private Label label;
     @FXML
@@ -69,9 +77,13 @@ public class WorldBuilderController extends Controller {
     public void initialize() {
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
         wallColorButton.setOnAction(e -> color = WALL_COLOR);
+        wallColorButton.setTooltip(new Tooltip("Drag and Drop to paint a wall."));
         npcColorButton.setOnAction(e -> color = NPC_COLOR);
+        npcColorButton.setTooltip(new Tooltip("Click to set NPC spawn location."));
         voidColorButton.setOnAction(e -> color = VOID_COLOR);
+        voidColorButton.setTooltip(new Tooltip("Click on any shape to delete it."));
         virusColorButton.setOnAction(e -> color = VIRUS_COLOR);
+        virusColorButton.setTooltip(new Tooltip("Click to set virus spawn location."));
         saveButton.setOnAction(e -> {
             try {
                 exportSprites();
@@ -82,12 +94,16 @@ public class WorldBuilderController extends Controller {
                 label.setText(ex.getMessage());
             }
         });
+        saveButton.setTooltip(new Tooltip("Save and export your map."));
+        socialDistancingCheckbox.setTooltip(new Tooltip("NPCs will avoid each other."));
+        increasedHygieneCheckbox.setTooltip(new Tooltip("NPCs will have a lower probability to get sick."));
+        betterMedicineCheckbox.setTooltip(new Tooltip("NPCs will become healthy quicker."));
     }
 
     /**
      * Handles the drawing logic and all mouse events.
      * <p>
-     * Makes sure, that no sprites overlap and only one {@link virusSprite} is present at a time.
+     * Makes sure that no sprites overlap and only one {@link virusSprite} is present at a time.
      */
     @SuppressWarnings("JavadocReference")
     public void armCanvas() {
@@ -99,6 +115,7 @@ public class WorldBuilderController extends Controller {
         graphicsContext.fillRect(0, 0, paintCanvas.getWidth(), paintCanvas.getHeight());
 
         paintCanvas.setOnMousePressed(mouseEvent -> {
+            label.setText("");
             int subSampledX = subSample(mouseEvent.getX(), PIXEL_SIZE);
             int subSampledY = subSample(mouseEvent.getY(), PIXEL_SIZE);
             // delete shape
@@ -170,10 +187,12 @@ public class WorldBuilderController extends Controller {
             if (color == WALL_COLOR) {
                 wall.setFill(color);
                 Sprite newWall = new Sprite(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
-                wallSprites.add(newWall);
-                npcSprites.removeIf(sprite -> sprite.intersects(newWall));
-                if (virusSprite != null && virusSprite.intersects(newWall)) {
-                    virusSprite = null;
+                if (newWall.getBoundary().getWidth() > 0 && newWall.getBoundary().getHeight() > 0) {
+                    wallSprites.add(newWall);
+                    npcSprites.removeIf(sprite -> sprite.intersects(newWall));
+                    if (virusSprite != null && virusSprite.intersects(newWall)) {
+                        virusSprite = null;
+                    }
                 }
                 repaint(graphicsContext);
             }
@@ -252,15 +271,21 @@ public class WorldBuilderController extends Controller {
         if (npcSprites.size() == 0) {
             throw new IllegalStateException("Starting location for NPCs must be set.");
         }
+
+        // TODO: proper exporting
+        System.out.println("Social Distancing: " + socialDistancingCheckbox.isSelected());
+        System.out.println("Increased Hygiene: " + increasedHygieneCheckbox.isSelected());
+        System.out.println("Better Medicine: " + betterMedicineCheckbox.isSelected());
+
         if (wallSprites.size() > 0) {
             System.out.println("Walls:");
-            wallSprites.forEach(sprite -> System.out.println(sprite.toString())); // TODO: proper exporting
+            wallSprites.forEach(sprite -> System.out.println(sprite.toString()));
         }
         System.out.println("NPCs:");
-        npcSprites.forEach(sprite -> System.out.println(sprite.toString())); // TODO: proper exporting
+        npcSprites.forEach(sprite -> System.out.println(sprite.toString()));
 
         System.out.println("Virus:");
-        System.out.println(virusSprite.toString()); // TODO: proper exporting
+        System.out.println(virusSprite.toString());
 
     }
 

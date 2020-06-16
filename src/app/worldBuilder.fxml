@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -16,12 +16,41 @@
             <Button fx:id="npcColorButton" mnemonicParsing="false" text="NPC"/>
             <Button fx:id="virusColorButton" mnemonicParsing="false" text="Virus"/>
             <Button fx:id="saveButton" mnemonicParsing="false" text="Export Picture" textAlignment="CENTER"/>
-            <Button fx:id="toMainMenuButton" cancelButton="true" mnemonicParsing="false" text="Cancel"/>
+            <padding>
+                <Insets bottom="10.0"/>
+            </padding>
+        </HBox>
+        <HBox alignment="BOTTOM_CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+                <CheckBox fx:id="socialDistancingCheckbox" mnemonicParsing="false" text="Social Distancing">
+                    <padding>
+                        <Insets left="10.0" right="10.0"/>
+                    </padding>
+                </CheckBox>
+                <CheckBox fx:id="increasedHygieneCheckbox" mnemonicParsing="false" text="Increased Hygiene">
+                    <padding>
+                        <Insets left="10.0" right="10.0"/>
+                    </padding>
+                </CheckBox>
+                <CheckBox fx:id="betterMedicineCheckbox" mnemonicParsing="false" text="Better Medicine">
+                    <padding>
+                        <Insets left="10.0" right="10.0"/>
+                    </padding>
+                </CheckBox>
+            </children>
+            <padding>
+                <Insets bottom="10.0"/>
+            </padding>
         </HBox>
         <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" textAlignment="CENTER" textFill="RED">
             <padding>
-                <Insets left="10.0" right="10.0"/>
+                <Insets bottom="10.0"/>
             </padding>
         </Label>
+        <Button fx:id="toMainMenuButton" alignment="BOTTOM_CENTER" cancelButton="true" mnemonicParsing="false"
+                text="Back to Main Menu" textAlignment="CENTER"/>
+        <padding>
+            <Insets bottom="10.0"/>
+        </padding>
     </VBox>
 </AnchorPane>

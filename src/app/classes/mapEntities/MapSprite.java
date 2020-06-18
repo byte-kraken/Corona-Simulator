@@ -54,4 +54,8 @@ public class MapSprite {
     public Color getColor() {
         return color;
     }
+
+    public enum SpriteType {
+        NPC, WALL, PLAYER_CHAR
+    }
 }

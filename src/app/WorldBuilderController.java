@@ -30,32 +30,18 @@ import java.util.stream.Stream;
  * @author Felix Ferchhumer
  */
 public class WorldBuilderController extends Controller {
-    // Misc
-    private final Map map;
+    @FXML
+    private ChoiceBox<String> npcChoiceBox;
     @FXML
     private TextField levelNameTextfield;
     @FXML
-    private CheckBox socialDistancingCheckbox;
-    @FXML
-    private CheckBox increasedHygieneCheckbox;
-    @FXML
-    private CheckBox betterMedicineCheckbox;
-    @FXML
     private Label statusLabel;
-    @FXML
-    private Button toMainMenuButton;
     @FXML
     private Canvas paintCanvas;
     @FXML
-    private Button wallColorButton;
+    private CheckBox socialDistancingCheckbox, increasedHygieneCheckbox, betterMedicineCheckbox;
     @FXML
-    private Button npcColorButton;
-    @FXML
-    private Button voidColorButton;
-    @FXML
-    private Button virusColorButton;
-    @FXML
-    private Button saveButton;
+    private Button wallColorButton, npcColorButton, voidColorButton, virusColorButton, saveButton, toMainMenuButton;
 
     // Sprite Colors
     private static final Color VOID_COLOR = Map.getVoidColor();
@@ -65,11 +51,12 @@ public class WorldBuilderController extends Controller {
     private static final Color WALL_DRAG_UNFINISHED_COLOR = Color.GREY; // color new wall has during dragging
     private static final Color ERRONEOUS_EXPORT = Color.RED;
     private static final Color SUCCESSFUL_EXPORT = Color.DARKGREEN;
-    @FXML
-    private ChoiceBox<MapNPC.npcTypes> npcChoiceBox;
+
+    // Misc
+    private final Map map;
     private Rectangle wall = null;
     private double wallStartingX, wallStartingY;
-    private MapSprite selectedSprite = new MapWall(-1, -1, 0, 0);
+    private MapSprite.SpriteType selectedSprite = MapSprite.SpriteType.WALL;
 
     public WorldBuilderController() {
         super();
@@ -78,17 +65,17 @@ public class WorldBuilderController extends Controller {
 
     public void initialize() {
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
-        wallColorButton.setOnAction(e -> selectedSprite = new MapWall(-1, -1, -1, -1));
+        wallColorButton.setOnAction(e -> selectedSprite = MapSprite.SpriteType.WALL);
         wallColorButton.setTooltip(new Tooltip("Drag and Drop to paint a wall."));
-        npcChoiceBox.setItems(FXCollections.observableList(Arrays.stream(MapNPC.npcTypes.values()).collect(Collectors.toList())));
+        npcChoiceBox.setItems(FXCollections.observableList(Arrays.stream(MapNPC.NpcType.values()).map(MapNPC.NpcType::getName).collect(Collectors.toList())));
         npcChoiceBox.setValue(npcChoiceBox.getItems().get(0));
         npcChoiceBox.setOnAction(e -> npcColorButton.fire());
         npcChoiceBox.setTooltip(new Tooltip("Select your preferred NPC type."));
-        npcColorButton.setOnAction(e -> selectedSprite = MapNPC.npcTypes.values()[npcChoiceBox.getSelectionModel().getSelectedIndex()].getType().apply(null));
+        npcColorButton.setOnAction(e -> selectedSprite = MapSprite.SpriteType.NPC);
         npcColorButton.setTooltip(new Tooltip("Click to set NPC spawn location."));
         voidColorButton.setOnAction(e -> selectedSprite = null);
         voidColorButton.setTooltip(new Tooltip("Click on any shape to delete it."));
-        virusColorButton.setOnAction(e -> selectedSprite = new MapPlayerChar(-1, -1));
+        virusColorButton.setOnAction(e -> selectedSprite = MapSprite.SpriteType.PLAYER_CHAR);
         virusColorButton.setTooltip(new Tooltip("Click to set virus spawn location."));
         saveButton.setOnAction(e -> {
             try {
@@ -141,7 +128,7 @@ public class WorldBuilderController extends Controller {
                 repaint(graphicsContext);
             }
             // begin drawing wall
-            else if (selectedSprite instanceof MapWall) {
+            else if (selectedSprite == MapSprite.SpriteType.WALL) {
                 // mark starting point of wall
                 graphicsContext.setFill(WALL_DRAG_INDICATOR_COLOR);
                 graphicsContext.fillRect(subSampledX, subSampledY, Constants.PIXEL_SIZE, Constants.PIXEL_SIZE);
@@ -151,25 +138,24 @@ public class WorldBuilderController extends Controller {
                 wall = new Rectangle();
             }
             // if space is not occupied, place NPC
-            else if (selectedSprite instanceof MapNPC) {
-                selectedSprite.setPosition(subSampledX, subSampledY);
-                if ((map.getWalls().size() == 0 || map.getWalls().stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite))) &&
-                        (map.getPlayer() == null || !map.getPlayer().intersects(selectedSprite)) &&
-                        (map.getNpcs().size() == 0 || map.getNpcs().stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite)))) {
-                    map.addNPC((MapNPC) selectedSprite);
+            else if (selectedSprite == MapSprite.SpriteType.NPC) {
+                MapNPC newNPC = new MapNPC(subSampledX, subSampledY, MapNPC.NpcType.values()[npcChoiceBox.getSelectionModel().getSelectedIndex()]);
+                if ((map.getWalls().size() == 0 || map.getWalls().stream().noneMatch(mapSprites -> mapSprites.intersects(newNPC))) &&
+                        (map.getPlayer() == null || !map.getPlayer().intersects(newNPC)) &&
+                        (map.getNpcs().size() == 0 || map.getNpcs().stream().noneMatch(mapSprites -> mapSprites.intersects(newNPC)))) {
+                    map.addNPC(newNPC);
                 }
                 repaint(graphicsContext);
-                npcColorButton.fire();
             }
             // if space is not occupied, place or move virus
-            else if (selectedSprite instanceof MapPlayerChar) {
-                selectedSprite.setPosition(subSampledX, subSampledY);
-                if ((map.getWalls().size() == 0 || map.getWalls().stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite))) &&
-                        (map.getNpcs().size() == 0 || map.getNpcs().stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite)))) {
+            else if (selectedSprite == MapSprite.SpriteType.PLAYER_CHAR) {
+                MapPlayerChar newVirus = new MapPlayerChar(subSampledX, subSampledY);
+                if ((map.getWalls().size() == 0 || map.getWalls().stream().noneMatch(mapSprites -> mapSprites.intersects(newVirus))) &&
+                        (map.getNpcs().size() == 0 || map.getNpcs().stream().noneMatch(mapSprites -> mapSprites.intersects(newVirus)))) {
                     if (map.getPlayer() != null) {
                         map.getPlayer().setPosition(subSampledX, subSampledY);
                     } else {
-                        map.setPlayer((MapPlayerChar) selectedSprite);
+                        map.setPlayer(newVirus);
                     }
                 }
                 repaint(graphicsContext);
@@ -181,7 +167,7 @@ public class WorldBuilderController extends Controller {
             int subSampledY = subSample(mouseEvent.getY());
 
             // preview of dragged shape
-            if (selectedSprite instanceof MapWall) {
+            if (selectedSprite == MapSprite.SpriteType.WALL) {
                 adjustCoords(wall, wallStartingX, wallStartingY, subSampledX, subSampledY);
 
                 repaint(graphicsContext); //deletes previous preview
@@ -192,8 +178,7 @@ public class WorldBuilderController extends Controller {
 
         paintCanvas.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseEvent -> {
             // final setting of shape
-            if (selectedSprite instanceof MapWall) {
-                wall.setFill(selectedSprite.getColor());
+            if (selectedSprite == MapSprite.SpriteType.WALL) {
                 MapWall newWall = new MapWall(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
                 if (newWall.getBoundary().getWidth() > 0 && newWall.getBoundary().getHeight() > 0) {
                     map.addWall(newWall);

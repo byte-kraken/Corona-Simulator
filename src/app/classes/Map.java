@@ -1,7 +1,6 @@
 package app.classes;
 
 import app.classes.mapEntities.MapNPC;
-import app.classes.mapEntities.MapNpcNormal;
 import app.classes.mapEntities.MapPlayerChar;
 import app.classes.mapEntities.MapWall;
 import javafx.scene.paint.Color;
@@ -58,9 +57,9 @@ public class Map implements Serializable {
         standardMap.addWall(new MapWall(1200, 140, 650, 50));
 
 
-        standardMap.addNPC(new MapNpcNormal(1566, 500));
-        standardMap.addNPC(new MapNpcNormal(420, 760));
-        standardMap.addNPC(new MapNpcNormal(1000, 100));
+        standardMap.addNPC(new MapNPC(1566, 500, MapNPC.NpcType.Normal));
+        standardMap.addNPC(new MapNPC(420, 760, MapNPC.NpcType.Normal));
+        standardMap.addNPC(new MapNPC(1000, 100, MapNPC.NpcType.ConspiracyTheorist));
 
         return standardMap;
     }

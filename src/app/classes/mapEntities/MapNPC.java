@@ -3,32 +3,30 @@ package app.classes.mapEntities;
 import app.constants.Constants;
 import javafx.scene.paint.Color;
 
-import java.util.function.Function;
+public class MapNPC extends MapSprite {
 
-public abstract class MapNPC extends MapSprite {
-
-    public MapNPC(double xStartPoint, double yStartPoint, Color color) {
-        super(xStartPoint, yStartPoint, Constants.PIXEL_SIZE, Constants.PIXEL_SIZE, color);
+    public MapNPC(double xStartPoint, double yStartPoint, NpcType type) {
+        super(xStartPoint, yStartPoint, Constants.PIXEL_SIZE, Constants.PIXEL_SIZE, type.color);
     }
 
-    public enum npcTypes {
-        Normal("Normal", o -> new MapNpcNormal()),
-        ConspiracyTheorist("Conspiracy Theorist", o -> new MapNpcConspiracyTheorist());
+    public enum NpcType {
+        Normal("Normal", Color.RED),
+        ConspiracyTheorist("Conspiracy Theorist", Color.DARKRED);
 
         private final String name;
-        private final Function<Object, MapNPC> type;
+        private final Color color;
 
-        npcTypes(String name, Function<Object, MapNPC> type) {
+        NpcType(String name, Color color) {
             this.name = name;
-            this.type = type;
+            this.color = color;
         }
 
         public String getName() {
             return name;
         }
 
-        public Function<Object, MapNPC> getType() {
-            return type;
+        public Color getColor() {
+            return color;
         }
     }
 }

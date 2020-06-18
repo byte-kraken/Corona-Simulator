@@ -6,12 +6,13 @@ import app.classes.mapEntities.MapPlayerChar;
 import app.classes.mapEntities.MapWall;
 import javafx.scene.paint.Color;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import static app.constants.Constants.STANDARD_MAP_SIZE_X;
 import static app.constants.Constants.STANDARD_MAP_SIZE_Y;
 
-public class Map {
+public class Map implements Serializable {
     private static final Color VOID_COLOR = Color.WHITE;
 
     private MapPlayerChar player;
@@ -19,6 +20,9 @@ public class Map {
     private final ArrayList<MapWall> walls;
 
     private String mapName;
+    private boolean socialDistancing;
+    private boolean increasedHygiene;
+    private boolean betterMedicine;
 
     private final int mapSizeX = STANDARD_MAP_SIZE_X;
     private final int mapSizeY = STANDARD_MAP_SIZE_Y;
@@ -71,5 +75,37 @@ public class Map {
 
     public void addWall(MapWall wallToAdd) {
         walls.add(wallToAdd);
+    }
+
+    public String getMapName() {
+        return mapName;
+    }
+
+    public void setMapName(String mapName) {
+        this.mapName = mapName;
+    }
+
+    public boolean isSocialDistancing() {
+        return socialDistancing;
+    }
+
+    public void setSocialDistancing(boolean socialDistancing) {
+        this.socialDistancing = socialDistancing;
+    }
+
+    public boolean isIncreasedHygiene() {
+        return increasedHygiene;
+    }
+
+    public void setIncreasedHygiene(boolean increasedHygiene) {
+        this.increasedHygiene = increasedHygiene;
+    }
+
+    public boolean isBetterMedicine() {
+        return betterMedicine;
+    }
+
+    public void setBetterMedicine(boolean betterMedicine) {
+        this.betterMedicine = betterMedicine;
     }
 }

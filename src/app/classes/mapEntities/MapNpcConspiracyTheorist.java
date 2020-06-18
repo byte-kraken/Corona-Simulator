@@ -8,4 +8,8 @@ public class MapNpcConspiracyTheorist extends MapNPC {
     public MapNpcConspiracyTheorist(double xStartPoint, double yStartPoint) {
         super(xStartPoint, yStartPoint, COLOR);
     }
+
+    public MapNpcConspiracyTheorist() {
+        this(-1, -1);
+    }
 }

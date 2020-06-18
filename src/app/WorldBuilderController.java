@@ -1,8 +1,12 @@
 package app;
 
 import app.classes.Map;
-import app.classes.mapEntities.*;
+import app.classes.mapEntities.MapNPC;
+import app.classes.mapEntities.MapPlayerChar;
+import app.classes.mapEntities.MapSprite;
+import app.classes.mapEntities.MapWall;
 import app.constants.Constants;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -12,8 +16,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -26,6 +30,8 @@ import java.util.stream.Stream;
  * @author Felix Ferchhumer
  */
 public class WorldBuilderController extends Controller {
+    // Misc
+    private final Map map;
     @FXML
     private TextField levelNameTextfield;
     @FXML
@@ -59,33 +65,26 @@ public class WorldBuilderController extends Controller {
     private static final Color WALL_DRAG_UNFINISHED_COLOR = Color.GREY; // color new wall has during dragging
     private static final Color ERRONEOUS_EXPORT = Color.RED;
     private static final Color SUCCESSFUL_EXPORT = Color.DARKGREEN;
-    private final List<MapWall> wallMapSprites = new ArrayList<>();
-    private final List<MapNPC> npcMapSprites = new ArrayList<>();
-
-    // Sprites
-    private MapPlayerChar virusMapSprites;
-
-    // Misc
+    @FXML
+    private ChoiceBox<MapNPC.npcTypes> npcChoiceBox;
     private Rectangle wall = null;
     private double wallStartingX, wallStartingY;
     private MapSprite selectedSprite = new MapWall(-1, -1, 0, 0);
 
     public WorldBuilderController() {
         super();
+        this.map = new Map();
     }
 
     public void initialize() {
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
         wallColorButton.setOnAction(e -> selectedSprite = new MapWall(-1, -1, -1, -1));
-        voidColorButton.setFocusTraversable(false);
         wallColorButton.setTooltip(new Tooltip("Drag and Drop to paint a wall."));
-        npcColorButton.setOnAction(e -> { // TODO: Implement GUI Selector
-            if (Math.random() < 0.5) {
-                selectedSprite = new MapNpcNormal(-1, -1);
-            } else {
-                selectedSprite = new MapNpcConspiracyTheorist(-1, -1);
-            }
-        });
+        npcChoiceBox.setItems(FXCollections.observableList(Arrays.stream(MapNPC.npcTypes.values()).collect(Collectors.toList())));
+        npcChoiceBox.setValue(npcChoiceBox.getItems().get(0));
+        npcChoiceBox.setOnAction(e -> npcColorButton.fire());
+        npcChoiceBox.setTooltip(new Tooltip("Select your preferred NPC type."));
+        npcColorButton.setOnAction(e -> selectedSprite = MapNPC.npcTypes.values()[npcChoiceBox.getSelectionModel().getSelectedIndex()].getType().apply(null));
         npcColorButton.setTooltip(new Tooltip("Click to set NPC spawn location."));
         voidColorButton.setOnAction(e -> selectedSprite = null);
         voidColorButton.setTooltip(new Tooltip("Click on any shape to delete it."));
@@ -115,6 +114,7 @@ public class WorldBuilderController extends Controller {
     @SuppressWarnings("JavadocReference")
     public void armCanvas() {
         paintCanvas.setCursor(Cursor.CROSSHAIR);
+        wallColorButton.requestFocus();
 
         final GraphicsContext graphicsContext = paintCanvas.getGraphicsContext2D();
         //initializes empty map
@@ -127,16 +127,16 @@ public class WorldBuilderController extends Controller {
             int subSampledY = subSample(mouseEvent.getY());
             // delete shape
             if (selectedSprite == null) {
-                if (wallMapSprites.size() > 0) {
-                    wallMapSprites.stream().filter(mapSprites -> mapSprites.getBoundary()
-                            .contains(subSampledX, subSampledY)).findAny().ifPresent(wallMapSprites::remove);
+                if (map.getWalls().size() > 0) {
+                    map.getWalls().stream().filter(mapSprites -> mapSprites.getBoundary()
+                            .contains(subSampledX, subSampledY)).findAny().ifPresent(map.getWalls()::remove);
                 }
-                if (npcMapSprites.size() > 0) {
-                    npcMapSprites.stream().filter(mapSprites -> mapSprites.getBoundary()
-                            .contains(subSampledX, subSampledY)).findAny().ifPresent(npcMapSprites::remove);
+                if (map.getNpcs().size() > 0) {
+                    map.getNpcs().stream().filter(mapSprites -> mapSprites.getBoundary()
+                            .contains(subSampledX, subSampledY)).findAny().ifPresent(map.getNpcs()::remove);
                 }
-                if (virusMapSprites != null && virusMapSprites.getBoundary().contains(subSampledX, subSampledY)) {
-                    virusMapSprites = null;
+                if (map.getPlayer() != null && map.getPlayer().getBoundary().contains(subSampledX, subSampledY)) {
+                    map.setPlayer(null);
                 }
                 repaint(graphicsContext);
             }
@@ -153,10 +153,10 @@ public class WorldBuilderController extends Controller {
             // if space is not occupied, place NPC
             else if (selectedSprite instanceof MapNPC) {
                 selectedSprite.setPosition(subSampledX, subSampledY);
-                if ((wallMapSprites.size() == 0 || wallMapSprites.stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite))) &&
-                        (virusMapSprites == null || !virusMapSprites.intersects(selectedSprite)) &&
-                        (npcMapSprites.size() == 0 || npcMapSprites.stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite)))) {
-                    npcMapSprites.add((MapNPC) selectedSprite);
+                if ((map.getWalls().size() == 0 || map.getWalls().stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite))) &&
+                        (map.getPlayer() == null || !map.getPlayer().intersects(selectedSprite)) &&
+                        (map.getNpcs().size() == 0 || map.getNpcs().stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite)))) {
+                    map.addNPC((MapNPC) selectedSprite);
                 }
                 repaint(graphicsContext);
                 npcColorButton.fire();
@@ -164,12 +164,12 @@ public class WorldBuilderController extends Controller {
             // if space is not occupied, place or move virus
             else if (selectedSprite instanceof MapPlayerChar) {
                 selectedSprite.setPosition(subSampledX, subSampledY);
-                if ((wallMapSprites.size() == 0 || wallMapSprites.stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite))) &&
-                        (npcMapSprites.size() == 0 || npcMapSprites.stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite)))) {
-                    if (virusMapSprites != null) {
-                        virusMapSprites.setPosition(subSampledX, subSampledY);
+                if ((map.getWalls().size() == 0 || map.getWalls().stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite))) &&
+                        (map.getNpcs().size() == 0 || map.getNpcs().stream().noneMatch(mapSprites -> mapSprites.intersects(selectedSprite)))) {
+                    if (map.getPlayer() != null) {
+                        map.getPlayer().setPosition(subSampledX, subSampledY);
                     } else {
-                        virusMapSprites = (MapPlayerChar) selectedSprite;
+                        map.setPlayer((MapPlayerChar) selectedSprite);
                     }
                 }
                 repaint(graphicsContext);
@@ -196,10 +196,10 @@ public class WorldBuilderController extends Controller {
                 wall.setFill(selectedSprite.getColor());
                 MapWall newWall = new MapWall(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
                 if (newWall.getBoundary().getWidth() > 0 && newWall.getBoundary().getHeight() > 0) {
-                    wallMapSprites.add(newWall);
-                    npcMapSprites.removeIf(mapSprites -> mapSprites.intersects(newWall));
-                    if (virusMapSprites != null && virusMapSprites.intersects(newWall)) {
-                        virusMapSprites = null;
+                    map.addWall(newWall);
+                    map.getNpcs().removeIf(mapSprites -> mapSprites.intersects(newWall));
+                    if (map.getPlayer() != null && map.getPlayer().intersects(newWall)) {
+                        map.setPlayer(null);
                     }
                 }
                 repaint(graphicsContext);
@@ -227,17 +227,17 @@ public class WorldBuilderController extends Controller {
         graphicsContext.fillRect(0, 0, paintCanvas.getWidth(), paintCanvas.getHeight());
 
         // paints wall and NPC sprites
-        Stream.concat(wallMapSprites.stream(), npcMapSprites.stream()).forEach(mapSprite -> {
+        Stream.concat(map.getWalls().stream(), map.getNpcs().stream()).forEach(mapSprite -> {
             graphicsContext.setFill(mapSprite.getColor());
             graphicsContext.fillRect(mapSprite.getBoundary().getMinX(), mapSprite.getBoundary().getMinY(),
                     mapSprite.getBoundary().getWidth(), mapSprite.getBoundary().getHeight());
         });
 
         // paints virus
-        if (virusMapSprites != null) {
-            graphicsContext.setFill(virusMapSprites.getColor());
-            graphicsContext.fillRect(virusMapSprites.getBoundary().getMinX(), virusMapSprites.getBoundary().getMinY(),
-                    virusMapSprites.getBoundary().getWidth(), virusMapSprites.getBoundary().getHeight());
+        if (map.getPlayer() != null) {
+            graphicsContext.setFill(map.getPlayer().getColor());
+            graphicsContext.fillRect(map.getPlayer().getBoundary().getMinX(), map.getPlayer().getBoundary().getMinY(),
+                    map.getPlayer().getBoundary().getWidth(), map.getPlayer().getBoundary().getHeight());
         }
     }
 
@@ -272,15 +272,19 @@ public class WorldBuilderController extends Controller {
      * Checks if all required map elements are present, otherwise {@throws IllegalStateException}
      */
     private void exportSprites() throws IllegalStateException {
-        if (virusMapSprites == null) {
+        if (map.getPlayer() == null) {
             throw new IllegalStateException("Starting location for virus must be set.");
         }
-        if (npcMapSprites.size() == 0) {
+        if (map.getNpcs().size() == 0) {
             throw new IllegalStateException("Starting location for NPCs must be set.");
         }
-        if (levelNameTextfield.getCharacters() == null || levelNameTextfield.getCharacters().equals("")) {
+        if (levelNameTextfield.getCharacters() == null || levelNameTextfield.getCharacters().toString().equals("")) {
             throw new IllegalStateException("Level name must be set.");
         }
+        map.setMapName(levelNameTextfield.getCharacters().toString());
+        map.setSocialDistancing(socialDistancingCheckbox.isSelected());
+        map.setBetterMedicine(betterMedicineCheckbox.isSelected());
+        map.setIncreasedHygiene(increasedHygieneCheckbox.isSelected());
 
         // TODO: proper exporting
         System.out.println("Level Name: " + levelNameTextfield.getCharacters());
@@ -288,15 +292,15 @@ public class WorldBuilderController extends Controller {
         System.out.println("Increased Hygiene: " + increasedHygieneCheckbox.isSelected());
         System.out.println("Better Medicine: " + betterMedicineCheckbox.isSelected());
 
-        if (wallMapSprites.size() > 0) {
+        if (map.getWalls().size() > 0) {
             System.out.println("Walls:");
-            wallMapSprites.forEach(mapSprites -> System.out.println(mapSprites.toString()));
+            map.getWalls().forEach(mapSprites -> System.out.println(mapSprites.toString()));
         }
         System.out.println("NPCs:");
-        npcMapSprites.forEach(mapSprites -> System.out.println(mapSprites.toString()));
+        map.getNpcs().forEach(mapSprites -> System.out.println(mapSprites.toString()));
 
         System.out.println("Virus:");
-        System.out.println(virusMapSprites.toString());
+        System.out.println(map.getPlayer().toString());
 
     }
 

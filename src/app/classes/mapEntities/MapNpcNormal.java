@@ -8,4 +8,8 @@ public class MapNpcNormal extends MapNPC {
     public MapNpcNormal(double xStartPoint, double yStartPoint) {
         super(xStartPoint, yStartPoint, COLOR);
     }
+
+    public MapNpcNormal() {
+        this(-1, -1);
+    }
 }

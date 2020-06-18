@@ -1,18 +1,11 @@
 package app.classes.mapEntities;
 
-public class MapNPC {
-    public double xStartPoint;
-    public double yStartPoint;
+import app.constants.Constants;
+import javafx.scene.paint.Color;
 
-    private NPCTYPE npctype;
+public abstract class MapNPC extends MapSprite {
 
-    public MapNPC(double xStartPoint, double yStartPoint, NPCTYPE npctype) {
-        this.xStartPoint = xStartPoint;
-        this.yStartPoint = yStartPoint;
-        this.npctype = npctype;
-    }
-
-    public enum NPCTYPE {
-        NORMAL
+    public MapNPC(double xStartPoint, double yStartPoint, Color color) {
+        super(xStartPoint, yStartPoint, Constants.PIXEL_SIZE, Constants.PIXEL_SIZE, color);
     }
 }

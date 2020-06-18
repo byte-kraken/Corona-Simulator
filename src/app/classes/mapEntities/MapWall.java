@@ -1,18 +1,12 @@
 package app.classes.mapEntities;
 
-public class MapWall {
-    public double positionX;
-    public double positionY;
-    public double width;
-    public double height;
+import javafx.scene.paint.Color;
+
+public class MapWall extends MapSprite {
+
+    public static final Color COLOR = Color.BLACK;
 
     public MapWall(double positionX, double positionY, double width, double height) {
-        this.positionX = positionX;
-        this.positionY = positionY;
-        this.width = width;
-        this.height = height;
+        super(positionX, positionY, width, height, COLOR);
     }
-
-
-
 }

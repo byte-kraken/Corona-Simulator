@@ -1,11 +1,13 @@
 package app.classes.mapEntities;
 
-public class MapPlayerChar {
-    public double xStartPoint;
-    public double yStartPoint;
+import app.constants.Constants;
+import javafx.scene.paint.Color;
+
+public class MapPlayerChar extends MapSprite {
+
+    public static final Color COLOR = Color.GREEN;
 
     public MapPlayerChar(double xStartPoint, double yStartPoint) {
-        this.xStartPoint = xStartPoint;
-        this.yStartPoint = yStartPoint;
+        super(xStartPoint, yStartPoint, Constants.PIXEL_SIZE, Constants.PIXEL_SIZE, COLOR);
     }
 }

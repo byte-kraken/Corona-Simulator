@@ -8,12 +8,12 @@ import javafx.scene.shape.Circle;
 
 public class NPC extends MovingSprite {
 
-    private Circle npcChar;
+    private final Circle npcChar;
 
     public NPC(double positionX, double positionY) {
 
         super(positionX, positionY);
-        npcChar= new Circle(positionX,positionY,50);
+        npcChar = new Circle(positionX, positionY, 50);
     }
 
     @Override

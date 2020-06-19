@@ -23,28 +23,28 @@ public class SinglePlayerModel {
         return player;
     }
 
-    public Iterator<NPC> getNPC_Iterator(){
+    public Iterator<NPC> getNPC_Iterator() {
         return Arrays.stream(npcs).iterator();
     }
-    public Iterator<Wall> getWall_Iterator(){
+
+    public Iterator<Wall> getWall_Iterator() {
         return Arrays.stream(walls).iterator();
     }
 
-    public void loadEntitiesFromMapInModel(Map map){
+    public void loadEntitiesFromMapInModel(Map map) {
         npcs = new NPC[map.getNpcs().size()];
         walls = new Wall[map.getWalls().size()];
 
-        player = new PlayerChar(map.getPlayer().xStartPoint,map.getPlayer().yStartPoint);
-        for(int i=0;i<map.getNpcs().size();i++){
+        player = new PlayerChar(map.getPlayer().getStartPositionX(), map.getPlayer().getStartPositionY());
+        for (int i = 0; i < map.getNpcs().size(); i++) {
             MapNPC mapNPC = map.getNpcs().get(i);
-            npcs[i] = new NPC(mapNPC.xStartPoint,mapNPC.yStartPoint);
+            npcs[i] = new NPC(mapNPC.getStartPositionX(), mapNPC.getStartPositionY());
         }
-        for(int i=0;i<map.getWalls().size();i++){
+        for (int i = 0; i < map.getWalls().size(); i++) {
             MapWall mapWall = map.getWalls().get(i);
-            walls[i] = new Wall(mapWall.positionX,mapWall.positionY,mapWall.width,mapWall.height);
+            walls[i] = new Wall(mapWall.getStartPositionX(), mapWall.getStartPositionY(), mapWall.getWidth(), mapWall.getHeight());
         }
     }
-
 
 
 }

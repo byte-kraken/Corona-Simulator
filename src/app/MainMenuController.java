@@ -26,7 +26,7 @@ public class MainMenuController {
     @FXML
     private Button singlePlayerButton;
     @FXML
-    private Button levelEditorButton;
+    private Button worldBuilderButton;
     @FXML
     private Button multiPlayerButton;
     @FXML
@@ -40,7 +40,7 @@ public class MainMenuController {
     void armMainMenuButtons(Stage primaryStage) {
         setSinglePlayerMainScene(primaryStage);
         //setMultiPlayerScene(primaryStage);
-        //setLevelEditorScene(primaryStage);
+        setWorldBuilderScene(primaryStage);
 
         exitButton.setOnAction(event -> closeStage(primaryStage));
 
@@ -63,6 +63,7 @@ public class MainMenuController {
         singlePlayerButton.setOnAction(event -> {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("singlePlayerMainUI.fxml"));
             loadScene(loader, primaryStage);
+            primaryStage.setTitle("Corona Simulator");
             SinglePlayerMainController controller = loader.getController();
             SinglePlayerModel standardTestModel = new SinglePlayerModel();
             standardTestModel.loadEntitiesFromMapInModel(Map.getStandardTestMap());
@@ -89,13 +90,15 @@ public class MainMenuController {
     }
 
     /**
-     * Loads the levelEditorButton and initializes the levelEditorScene using {@link LevelEditorController}.
+     * Loads the levelEditorButton and initializes the levelEditorScene using {@link WorldBuilderController}.
      */
-    private void setLevelEditorScene(Stage primaryStage) {
-        levelEditorButton.setOnAction(event -> {
-            //TODO: Implement levelEditorUI.fxml
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("levelEditorUI.fxml"));
+    private void setWorldBuilderScene(Stage primaryStage) {
+        worldBuilderButton.setOnAction(event -> {
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("worldBuilder.fxml"));
             loadScene(loader, primaryStage);
+            primaryStage.setTitle("World Builder");
+            WorldBuilderController controller = loader.getController();
+            controller.armCanvas(); //canvas has to be loaded after scene was created
         });
         //TODO: Resources Folder where own levels can be saved and own ones can be loaded from
     }

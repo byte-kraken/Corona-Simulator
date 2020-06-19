@@ -158,6 +158,9 @@ public class SinglePlayerMainController extends Controller {
         if (!modelSet) {
             throw new ModelNotSetException();
         }
+        //Set Full Screen
+
+        getPrimaryStage().setFullScreen(true);
 
 
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();

@@ -29,7 +29,18 @@ public class PlayerChar extends MovingSprite {
     @Override
     public void render(GraphicsContext gc) {
         gc.setFill(Color.BLUE);
-        gc.fillOval(player.getCenterX(), player.getCenterY(), player.getRadius(), player.getRadius());
+        gc.fillOval(player.getCenterX()-player.getRadius(),
+                player.getCenterY()-player.getRadius(), player.getRadius()*2,
+                player.getRadius()*2);
+
+
+        //Debug
+//        gc.fillText(this.toString(),player.getCenterX(),player.getCenterY());
+//        gc.setStroke(Color.RED);
+//        Bounds b = getBoundaries()[0];
+//        gc.strokeRect(b.getMinX(),b.getMinY(),b.getWidth(),b.getHeight());
+//        gc.setStroke(Color.BLACK);
+
     }
 
     @Override

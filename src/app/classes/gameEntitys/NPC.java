@@ -19,7 +19,9 @@ public class NPC extends MovingSprite {
     @Override
     public void render(GraphicsContext gc) {
         gc.setFill(Color.GREEN);
-        gc.fillOval(npcChar.getCenterX(), npcChar.getCenterY(), npcChar.getRadius(), npcChar.getRadius());
+        gc.fillOval(npcChar.getCenterX()-npcChar.getRadius(),
+                npcChar.getCenterY()-npcChar.getRadius(), npcChar.getRadius()*2,
+                npcChar.getRadius()*2);
     }
 
     @Override

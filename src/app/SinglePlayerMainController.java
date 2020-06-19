@@ -4,6 +4,7 @@ import app.classes.gameEntitys.NPC;
 import app.classes.gameEntitys.Wall;
 import app.exceptions.KeyEventhandlerNotSetException;
 import app.exceptions.ModelNotSetException;
+import app.exceptions.StartScreenNotInitializedException;
 import app.model.SinglePlayerModel;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -23,6 +24,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+
+import static app.constants.Constants.STANDARD_MAP_SIZE_X;
+import static app.constants.Constants.STANDARD_MAP_SIZE_Y;
 
 /**
  * Controller {@link Controller} for the SinglePlayerMode.
@@ -60,7 +64,11 @@ public class SinglePlayerMainController extends Controller {
 
     private boolean keyEventHandlerSet = false;
 
+    private boolean startScreenInitialized = false;
+
     private boolean gameStarted = false;
+
+
 
 
     public SinglePlayerMainController() {
@@ -77,6 +85,21 @@ public class SinglePlayerMainController extends Controller {
         assert gameCanvas != null : "fx:id=\"gameCanvas\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
 
         //Assertions End
+        //Set Sizes Start
+
+        //Set Size of Canvas
+        mainAnchorPane.setMinSize(STANDARD_MAP_SIZE_X, STANDARD_MAP_SIZE_Y);
+        mainAnchorPane.setMaxSize(STANDARD_MAP_SIZE_X,STANDARD_MAP_SIZE_Y);
+
+        gameCanvas.setWidth(STANDARD_MAP_SIZE_X);
+        gameCanvas.setHeight(STANDARD_MAP_SIZE_Y);
+
+
+
+
+
+        //Set Sizes End
+
         //Regular fields initialization
 
         input = new ArrayList<String>();
@@ -86,6 +109,8 @@ public class SinglePlayerMainController extends Controller {
         //Action Handlers
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
         toMainMenuButton.setFocusTraversable(false); //needs to be set for all focusable elements in the scene, otherwise key detection does not work
+
+
 
         //Action Handlers END
     }
@@ -133,6 +158,8 @@ public class SinglePlayerMainController extends Controller {
         if (!modelSet) {
             throw new ModelNotSetException();
         }
+
+
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
 
         Font theFont = Font.font("Helvetica", FontWeight.BOLD, 24);
@@ -142,10 +169,19 @@ public class SinglePlayerMainController extends Controller {
         gc.setLineWidth(1);
 
         gc.fillText("Press Space to start the game", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) - 50);
+
+        startScreenInitialized = true;
     }
 
-
-    public void startGame() throws ModelNotSetException, KeyEventhandlerNotSetException {
+    /**
+     * Main game method. Starts the Game Loop.
+     *
+     * Can only be started after {@link #initStartScreen()} has benn called before}
+     */
+    public void startGame() {
+        if (!startScreenInitialized) {
+            throw new StartScreenNotInitializedException();
+        }
 
         gameStarted = true;
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
@@ -160,17 +196,18 @@ public class SinglePlayerMainController extends Controller {
                 double elapsedTime = (currentNanoTime - lastNanoTime[0]) / 1000000000.0;
                 lastNanoTime[0] = currentNanoTime;
 
-                siPModel.getPlayer().setVelocity(0, 0);
-                if (input.contains("LEFT"))
-                    siPModel.getPlayer().addVelocity(-100, 0);
-                if (input.contains("RIGHT"))
-                    siPModel.getPlayer().addVelocity(100, 0);
-                if (input.contains("UP"))
-                    siPModel.getPlayer().addVelocity(0, -100);
-                if (input.contains("DOWN"))
-                    siPModel.getPlayer().addVelocity(0, 100);
+                //Process Input Start
 
+                applyPlayerInputs();
+
+
+                //Process Input End
+                //Update Game Start
                 siPModel.getPlayer().update(elapsedTime);
+
+                //Collision Detection Start
+
+
                 //TODO Collision Detection Properly
                 Iterator<Wall> wallIter = siPModel.getWall_Iterator();
                 while (wallIter.hasNext()) {
@@ -178,23 +215,21 @@ public class SinglePlayerMainController extends Controller {
                     if (wall.intersects(siPModel.getPlayer())) {
                         siPModel.getPlayer().wallCollision(elapsedTime);
                     }
-//                    System.out.println(wall.toString());
                 }
 
 
-                //TODO END
+
+                //Collision Detection End
+                //Update Game End
+                //Render Start
                 gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
 
                 siPModel.getPlayer().render(gc);
 
-                gc.fillText("100", 100, 100);
-                gc.fillText("200", 200, 200);
-                gc.fillText("500", 500, 500);
-                gc.fillText("500x", 500, 100);
-                gc.fillText("500y", 100, 500);
-                gc.fillText("1000", 1000, 1000);
-                gc.fillText("1000x", 1000, 100);
-                gc.fillText("1000x", 100, 1000);
+
+
+                //drawDebugGrid(gc);
+
 
 
                 wallIter = siPModel.getWall_Iterator();
@@ -210,10 +245,43 @@ public class SinglePlayerMainController extends Controller {
                     npc.render(gc);
 //
                 }
-
+                //Render End
 
             }
         }.start();
 
+    }
+
+    /**
+     * Checks if player pressed key and adds velocity to Player model accordingly
+     */
+    private void applyPlayerInputs(){
+        siPModel.getPlayer().setVelocity(0, 0);
+        int playerSpeed = 200;
+        if(input.contains("CONTROL")){
+            playerSpeed = 400;
+        }
+
+        if (input.contains("LEFT"))
+            siPModel.getPlayer().addVelocity(-playerSpeed, 0);
+        if (input.contains("RIGHT"))
+            siPModel.getPlayer().addVelocity(playerSpeed, 0);
+        if (input.contains("UP"))
+            siPModel.getPlayer().addVelocity(0, -playerSpeed);
+        if (input.contains("DOWN"))
+            siPModel.getPlayer().addVelocity(0, playerSpeed);
+    }
+
+
+    private void drawDebugGrid(GraphicsContext gc){
+        for(int x=0;x<STANDARD_MAP_SIZE_X;x+=100){
+            gc.fillText(Integer.toString(x),x,50);
+            gc.strokeLine(x,0,x,STANDARD_MAP_SIZE_Y);
+        }
+
+        for(int y=0;y<STANDARD_MAP_SIZE_Y;y+=100){
+            gc.fillText(Integer.toString(y),10,y);
+            gc.strokeLine(0,y,STANDARD_MAP_SIZE_X,y);
+        }
     }
 }

@@ -15,6 +15,7 @@ public interface SpriteInterface
 
     public  void render(GraphicsContext gc);
 
+
     /**
      * Returns an Bounds[] with all boundary Objects of a sprite
      * @return

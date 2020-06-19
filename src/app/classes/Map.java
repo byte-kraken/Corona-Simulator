@@ -52,9 +52,9 @@ public class Map implements Serializable {
         MapPlayerChar playerChar = new MapPlayerChar(584, 237);
         standardMap.setPlayer(playerChar);
 
-        standardMap.addWall(new MapWall(0, 346, 600, 50));
-        standardMap.addWall(new MapWall(1000, 400, 50, 1344));
-        standardMap.addWall(new MapWall(1200, 140, 650, 50));
+        standardMap.addWall(new MapWall(0, 200, 500, 50));
+        standardMap.addWall(new MapWall(500, 500, 200, 200));
+        standardMap.addWall(new MapWall(0, 900, 500, 50));
 
 
         standardMap.addNPC(new MapNPC(1566, 500, MapNPC.NpcType.Normal));

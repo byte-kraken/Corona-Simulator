@@ -19,8 +19,16 @@ public class Wall extends NonMovingSprite {
     public void render(GraphicsContext gc) {
         gc.setFill(Color.BLACK);
         gc.fillRect(wall.getX(),wall.getY(),wall.getWidth(),wall.getHeight());
-        gc.setFill(Color.RED);
-        gc.fillText("Wall X:"+wall.getX()+" Y:"+wall.getY(),wall.getX(),wall.getY());
+
+
+
+        //Debug
+//        gc.setFill(Color.RED);
+//        gc.fillText(wall.toString(),wall.getX(),wall.getY());
+//        gc.setStroke(Color.RED);
+//        Bounds b = getBoundaries()[0];
+//        gc.strokeRect(b.getMinX(),b.getMinY(),b.getWidth(),b.getHeight());
+//        gc.setStroke(Color.BLACK);
     }
 
     @Override
@@ -34,7 +42,7 @@ public class Wall extends NonMovingSprite {
         StringBuilder sb = new StringBuilder();
         sb.append("Wall with:");
         sb.append(super.toString());
-        sb.append("and Width").append(wall.getWidth()).append("Height:").append(wall.getHeight());
+        sb.append("and Width ").append(wall.getWidth()).append("Height: ").append(wall.getHeight());
         return sb.toString();
     }
 }

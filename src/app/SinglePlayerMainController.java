@@ -4,6 +4,7 @@ import app.classes.gameEntitys.NPC;
 import app.classes.gameEntitys.Wall;
 import app.exceptions.KeyEventhandlerNotSetException;
 import app.exceptions.ModelNotSetException;
+import app.exceptions.StartScreenNotInitializedException;
 import app.model.SinglePlayerModel;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -23,6 +24,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static app.constants.Constants.STANDARD_MAP_SIZE_X;
+import static app.constants.Constants.STANDARD_MAP_SIZE_Y;
 
 /**
  * Controller {@link Controller} for the SinglePlayerMode.
@@ -30,10 +35,7 @@ import java.util.ResourceBundle;
  * Controls the virus, NPCs and the main logic.
  */
 public class SinglePlayerMainController extends Controller {
-    /**
-     * FXMl Fields
-     */
-
+    //FXMl Fields
     @FXML
     private ResourceBundle resources;
 
@@ -52,16 +54,10 @@ public class SinglePlayerMainController extends Controller {
     @FXML
     private Canvas gameCanvas;
 
-    /**
-     * FXM Fields End
-     */
-    /**
-     * Regular fields
-     */
+    //FXM Fields End
+    //Regular fields
 
-    /**
-     * Input Buffer
-     */
+    //Input Buffer
     private ArrayList<String> input;
 
     private SinglePlayerModel siPModel;
@@ -69,7 +65,11 @@ public class SinglePlayerMainController extends Controller {
 
     private boolean keyEventHandlerSet = false;
 
+    private boolean startScreenInitialized = false;
+
     private boolean gameStarted = false;
+
+
 
 
     public SinglePlayerMainController() {
@@ -78,38 +78,42 @@ public class SinglePlayerMainController extends Controller {
 
     public void initialize() {
 
-        /**
-         * Assertions
-         */
+        // Assertions Start
 
         assert mainAnchorPane != null : "fx:id=\"mainAnchorPane\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert nrInfectedLabel != null : "fx:id=\"nrInfectedLabel\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert toMainMenuButton != null : "fx:id=\"toMainMenuButton\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert gameCanvas != null : "fx:id=\"gameCanvas\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
 
-        /**
-         * Assertions End
-         */
-        /**
-         * Regular fields initialization
-         */
+        //Assertions End
+        //Set Sizes Start
+
+        //Set Size of Canvas
+        mainAnchorPane.setMinSize(STANDARD_MAP_SIZE_X, STANDARD_MAP_SIZE_Y);
+        mainAnchorPane.setMaxSize(STANDARD_MAP_SIZE_X,STANDARD_MAP_SIZE_Y);
+
+        gameCanvas.setWidth(STANDARD_MAP_SIZE_X);
+        gameCanvas.setHeight(STANDARD_MAP_SIZE_Y);
+
+
+
+
+
+        //Set Sizes End
+
+        //Regular fields initialization
 
         input = new ArrayList<String>();
 
-        /**
-         * Regular fields initialization End
-         */
+        //Regular fields initialization End
 
-        /**
-         * Action Handlers
-         */
+        //Action Handlers
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
         toMainMenuButton.setFocusTraversable(false); //needs to be set for all focusable elements in the scene, otherwise key detection does not work
 
 
-        /**
-         * Action Handlers END
-         */
+
+        //Action Handlers END
     }
 
     public void setKeyEventHandler() {
@@ -155,6 +159,11 @@ public class SinglePlayerMainController extends Controller {
         if (!modelSet) {
             throw new ModelNotSetException();
         }
+        //Set Full Screen
+
+        getPrimaryStage().setFullScreen(true);
+
+
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
 
         Font theFont = Font.font("Helvetica", FontWeight.BOLD, 24);
@@ -165,15 +174,33 @@ public class SinglePlayerMainController extends Controller {
 
         gc.fillText("Press Space to start the game", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) - 50);
 
-
+        startScreenInitialized = true;
     }
 
-
-    public void startGame() throws ModelNotSetException, KeyEventhandlerNotSetException {
+    /**
+     * Main game method. Starts the Game Loop.
+     *
+     * Can only be started after {@link #initStartScreen()} has benn called before}
+     */
+    public void startGame() {
+        if (!startScreenInitialized) {
+            throw new StartScreenNotInitializedException();
+        }
 
         gameStarted = true;
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
+
+
+
+        Iterator<NPC> npcSetVeloIter = siPModel.getNPC_Iterator();
+        while (npcSetVeloIter.hasNext()) {
+            NPC npc = npcSetVeloIter.next();
+            npc.setVelocity(ThreadLocalRandom.current().nextDouble(-100, 100)
+                    ,ThreadLocalRandom.current().nextDouble(-100, 100));
+            //npc.setVelocity(0,-10);
+        }
+
 
         final Long[] lastNanoTime = {System.nanoTime()};
 
@@ -184,60 +211,113 @@ public class SinglePlayerMainController extends Controller {
                 double elapsedTime = (currentNanoTime - lastNanoTime[0]) / 1000000000.0;
                 lastNanoTime[0] = currentNanoTime;
 
-                siPModel.getPlayer().setVelocity(0, 0);
-                if (input.contains("LEFT"))
-                    siPModel.getPlayer().addVelocity(-100, 0);
-                if (input.contains("RIGHT"))
-                    siPModel.getPlayer().addVelocity(100, 0);
-                if (input.contains("UP"))
-                    siPModel.getPlayer().addVelocity(0, -100);
-                if (input.contains("DOWN"))
-                    siPModel.getPlayer().addVelocity(0, 100);
+                Iterator<NPC> npcIterator;
+                Iterator<Wall> wallIter;
 
+                //Process Input Start
+                //Player Movement Start
+                applyPlayerInputs();
+                //Player Movement End
+                //NPC Movement Start
+
+                npcIterator = siPModel.getNPC_Iterator();
+                while (npcIterator.hasNext()) {
+                    NPC npc = npcIterator.next();
+                    npc.update(elapsedTime);
+                }
+
+                //NPC Movement END
+
+
+                //Process Input End
+                //Update Game Start
                 siPModel.getPlayer().update(elapsedTime);
+
+                //Collision Detection Start
+
+
                 //TODO Collision Detection Properly
-                Iterator<Wall> wallIter = siPModel.getWall_Iterator();
+                wallIter = siPModel.getWall_Iterator();
                 while (wallIter.hasNext()) {
                     Wall wall = wallIter.next();
                     if (wall.intersects(siPModel.getPlayer())) {
                         siPModel.getPlayer().wallCollision(elapsedTime);
                     }
-//                    System.out.println(wall.toString());
+                }
+
+                npcIterator = siPModel.getNPC_Iterator();
+                while (npcIterator.hasNext()) {
+                    NPC npc = npcIterator.next();
+                    wallIter = siPModel.getWall_Iterator();
+                    while (wallIter.hasNext()) {
+                        Wall wall = wallIter.next();
+                        if (npc.intersects(wall)) {
+                            npc.wallCollision(elapsedTime);
+                        }
+                    }
+                    npc.update(elapsedTime);
                 }
 
 
-                //TODO END
+
+                //Collision Detection End
+                //Update Game End
+                //Render Start
                 gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
 
                 siPModel.getPlayer().render(gc);
 
-                gc.fillText("100", 100, 100);
-                gc.fillText("200", 200, 200);
-                gc.fillText("500", 500, 500);
-                gc.fillText("500x", 500, 100);
-                gc.fillText("500y", 100, 500);
-                gc.fillText("1000", 1000, 1000);
-                gc.fillText("1000x", 1000, 100);
-                gc.fillText("1000x", 100, 1000);
 
 
+                //drawDebugGrid(gc);
                 wallIter = siPModel.getWall_Iterator();
                 while (wallIter.hasNext()) {
                     Wall wall = wallIter.next();
                     wall.render(gc);
 //                    System.out.println(wall.toString());
                 }
-
-                Iterator<NPC> npcIterator = siPModel.getNPC_Iterator();
+                npcIterator = siPModel.getNPC_Iterator();
                 while (npcIterator.hasNext()) {
                     NPC npc = npcIterator.next();
                     npc.render(gc);
-//
                 }
-
+                //Render End
 
             }
         }.start();
 
+    }
+
+    /**
+     * Checks if player pressed key and adds velocity to Player model accordingly
+     */
+    private void applyPlayerInputs(){
+        siPModel.getPlayer().setVelocity(0, 0);
+        int playerSpeed = 200;
+        if(input.contains("CONTROL")){
+            playerSpeed = 400;
+        }
+
+        if (input.contains("LEFT"))
+            siPModel.getPlayer().addVelocity(-playerSpeed, 0);
+        if (input.contains("RIGHT"))
+            siPModel.getPlayer().addVelocity(playerSpeed, 0);
+        if (input.contains("UP"))
+            siPModel.getPlayer().addVelocity(0, -playerSpeed);
+        if (input.contains("DOWN"))
+            siPModel.getPlayer().addVelocity(0, playerSpeed);
+    }
+
+
+    private void drawDebugGrid(GraphicsContext gc){
+        for(int x=0;x<STANDARD_MAP_SIZE_X;x+=100){
+            gc.fillText(Integer.toString(x),x,50);
+            gc.strokeLine(x,0,x,STANDARD_MAP_SIZE_Y);
+        }
+
+        for(int y=0;y<STANDARD_MAP_SIZE_Y;y+=100){
+            gc.fillText(Integer.toString(y),10,y);
+            gc.strokeLine(0,y,STANDARD_MAP_SIZE_X,y);
+        }
     }
 }

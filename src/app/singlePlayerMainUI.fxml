@@ -8,9 +8,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0"  xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.SinglePlayerMainController">
-   <Canvas height="1080.0" width="1920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-     <Canvas fx:id="gameCanvas" height="1033.0" layoutX="40.0" layoutY="23.0" width="1840.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="23.0" />
+<AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.SinglePlayerMainController">
+     <Canvas fx:id="gameCanvas" height="1080.0" layoutX="40.0" layoutY="23.0" width="1920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
      <HBox prefHeight="119.0" prefWidth="428.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
          <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="119.0" prefWidth="151.0" text="Infected:" textAlignment="CENTER">
              <font>

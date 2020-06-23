@@ -1,32 +1,27 @@
 package app.classes.mapEntities;
 
+import app.classes.NPCType;
 import app.constants.Constants;
-import javafx.scene.paint.Color;
 
+/**
+ * The {@link MapSprite} representing an {@link app.classes.gameEntitys.NPC}.
+ */
 public class MapNPC extends MapSprite {
 
-    public MapNPC(double xStartPoint, double yStartPoint, NpcType type) {
-        super(xStartPoint, yStartPoint, Constants.PIXEL_SIZE, Constants.PIXEL_SIZE, type.color);
+    public MapNPC(double xStartPoint, double yStartPoint) {
+        this(xStartPoint, yStartPoint, NPCType.Normal);
     }
 
-    public enum NpcType {
-        Normal("Normal", Color.RED),
-        ConspiracyTheorist("Conspiracy Theorist", Color.DARKRED);
-
-        private final String name;
-        private final Color color;
-
-        NpcType(String name, Color color) {
-            this.name = name;
-            this.color = color;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Color getColor() {
-            return color;
-        }
+    public MapNPC(double xStartPoint, double yStartPoint, double width, double height) {
+        this(xStartPoint, yStartPoint, width, height, NPCType.Normal);
     }
+
+    public MapNPC(double xStartPoint, double yStartPoint, NPCType type) {
+        this(xStartPoint, yStartPoint, Constants.PIXEL_SIZE, Constants.PIXEL_SIZE, type);
+    }
+
+    public MapNPC(double xStartPoint, double yStartPoint, double width, double height, NPCType type) {
+        super(xStartPoint, yStartPoint, width, height, type.getColor());
+    }
+
 }

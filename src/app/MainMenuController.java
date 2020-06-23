@@ -66,11 +66,10 @@ public class MainMenuController {
             primaryStage.setTitle("Corona Simulator");
             SinglePlayerMainController controller = loader.getController();
             SinglePlayerModel standardTestModel = new SinglePlayerModel();
-            standardTestModel.loadEntitiesFromMapInModel(Map.getStandardTestMap());
+            standardTestModel.loadEntitiesFromMapInModel(Map.getStandardTestMap2());
             controller.setKeyEventHandler();
             controller.setSinglePlayerModel(standardTestModel);
             controller.initStartScreen();
-
 
 
         });
@@ -97,6 +96,7 @@ public class MainMenuController {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("worldBuilder.fxml"));
             loadScene(loader, primaryStage);
             primaryStage.setTitle("World Builder");
+            primaryStage.setFullScreen(true);
             WorldBuilderController controller = loader.getController();
             controller.armCanvas(); //canvas has to be loaded after scene was created
         });

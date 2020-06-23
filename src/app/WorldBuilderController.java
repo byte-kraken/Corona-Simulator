@@ -49,21 +49,30 @@ public class WorldBuilderController extends Controller {
     // Temp colors
     private static final Color WALL_DRAG_INDICATOR_COLOR = Color.GOLD; // marks starting point of a new wall
     private static final Color WALL_DRAG_UNFINISHED_COLOR = Color.GREY; // color new wall has during dragging
-    private static final Color ERRONEOUS_EXPORT = Color.RED;
-    private static final Color SUCCESSFUL_EXPORT = Color.DARKGREEN;
+    private static final Color ERRONEOUS_EXPORT_COLOR = Color.RED;
+    private static final Color SUCCESSFUL_EXPORT_COLOR = Color.DARKGREEN;
+    private static final Color NEUTRAL_MESSAGE_COLOR = Color.DARKBLUE;
 
     // Misc
     private final Map map;
     private Rectangle wall = null;
     private double wallStartingX, wallStartingY;
     private MapSprite.SpriteType selectedSprite = MapSprite.SpriteType.WALL;
+    public static double scaleFactor; // standard: 1.2
+    // game sprites have to be scaled by this factor to work on a screen with dimensions 1920*1080.
 
     public WorldBuilderController() {
+        this(new Map());
+    }
+
+    public WorldBuilderController(Map map) {
         super();
-        this.map = new Map();
+        this.map = map;
     }
 
     public void initialize() {
+        statusLabel.setTextFill(NEUTRAL_MESSAGE_COLOR);
+        statusLabel.setText("Use the controls at the top to draw and name your level. Press " + saveButton.getText() + " when you are done!");
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
         wallColorButton.setOnAction(e -> selectedSprite = MapSprite.SpriteType.WALL);
         wallColorButton.setTooltip(new Tooltip("Drag and Drop to paint a wall."));
@@ -80,10 +89,10 @@ public class WorldBuilderController extends Controller {
         saveButton.setOnAction(e -> {
             try {
                 exportSprites();
-                statusLabel.setTextFill(SUCCESSFUL_EXPORT);
+                statusLabel.setTextFill(SUCCESSFUL_EXPORT_COLOR);
                 statusLabel.setText("Successfully exported.");
             } catch (IllegalStateException ex) {
-                statusLabel.setTextFill(ERRONEOUS_EXPORT);
+                statusLabel.setTextFill(ERRONEOUS_EXPORT_COLOR);
                 statusLabel.setText(ex.getMessage());
             }
         });
@@ -103,8 +112,12 @@ public class WorldBuilderController extends Controller {
         paintCanvas.setCursor(Cursor.CROSSHAIR);
         wallColorButton.requestFocus();
 
+        // makes sure that canvas is scaled correctly and follows agreed upon format
+        assert paintCanvas.getWidth() / paintCanvas.getHeight() == 16.0 / 9.0 : "Canvas scaling does not fit format of 16/9";
+        map.setScaleFactor((double) Constants.STANDARD_MAP_SIZE_X / paintCanvas.getWidth());
+
         final GraphicsContext graphicsContext = paintCanvas.getGraphicsContext2D();
-        //initializes empty map
+        // initializes empty map
         graphicsContext.setFill(VOID_COLOR);
         graphicsContext.fillRect(0, 0, paintCanvas.getWidth(), paintCanvas.getHeight());
 

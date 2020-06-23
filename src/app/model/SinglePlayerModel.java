@@ -35,15 +35,15 @@ public class SinglePlayerModel {
         npcs = new NPC[map.getNpcs().size()];
         walls = new Wall[map.getWalls().size()];
 
-        player = new PlayerChar(map.getPlayer().getStartPositionX(), map.getPlayer().getStartPositionY());
 
+        player = new PlayerChar(map.getPlayer().getStartPositionX() * map.getScaleFactor(), map.getPlayer().getStartPositionY() * map.getScaleFactor());
         for (int i = 0; i < map.getNpcs().size(); i++) {
             MapNPC mapNPC = map.getNpcs().get(i);
-            npcs[i] = new NPC(mapNPC.getStartPositionX(), mapNPC.getStartPositionY());
+            npcs[i] = new NPC(mapNPC.getStartPositionX() * map.getScaleFactor(), mapNPC.getStartPositionY() * map.getScaleFactor());
         }
         for (int i = 0; i < map.getWalls().size(); i++) {
             MapWall mapWall = map.getWalls().get(i);
-            walls[i] = new Wall(mapWall.getStartPositionX(), mapWall.getStartPositionY(), mapWall.getWidth(), mapWall.getHeight());
+            walls[i] = new Wall(mapWall.getStartPositionX() * map.getScaleFactor(), mapWall.getStartPositionY() * map.getScaleFactor(), mapWall.getWidth() * map.getScaleFactor(), mapWall.getHeight() * map.getScaleFactor());
         }
     }
 

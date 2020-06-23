@@ -25,6 +25,7 @@ public class Map implements Serializable {
 
     private final int mapSizeX = STANDARD_MAP_SIZE_X;
     private final int mapSizeY = STANDARD_MAP_SIZE_Y;
+    private double scaleFactor = 1;
 
     public Map() {
         this.npcs = new ArrayList<>();
@@ -141,5 +142,13 @@ public class Map implements Serializable {
 
     public void setBetterMedicine(boolean betterMedicine) {
         this.betterMedicine = betterMedicine;
+    }
+
+    public void setScaleFactor(double scaleFactor) {
+        this.scaleFactor = scaleFactor;
+    }
+
+    public double getScaleFactor() {
+        return scaleFactor;
     }
 }

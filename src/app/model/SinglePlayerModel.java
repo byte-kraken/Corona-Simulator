@@ -10,6 +10,9 @@ import app.classes.mapEntities.MapWall;
 import java.util.Arrays;
 import java.util.Iterator;
 
+/**
+ * Model that translates {@link app.classes.mapEntities.MapSprite} to their corresponding {@link app.classes.gameEntitys}.
+ */
 public class SinglePlayerModel {
     private PlayerChar player;
     private NPC[] npcs;
@@ -34,7 +37,6 @@ public class SinglePlayerModel {
     public void loadEntitiesFromMapInModel(Map map) {
         npcs = new NPC[map.getNpcs().size()];
         walls = new Wall[map.getWalls().size()];
-
 
         player = new PlayerChar(map.getPlayer().getStartPositionX() * map.getScaleFactor(), map.getPlayer().getStartPositionY() * map.getScaleFactor());
         for (int i = 0; i < map.getNpcs().size(); i++) {

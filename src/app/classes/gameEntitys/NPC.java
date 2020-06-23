@@ -1,5 +1,6 @@
 package app.classes.gameEntitys;
 
+import app.classes.NPCType;
 import app.classes.gameEntitys.abstractions.MovingSprite;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,6 +9,11 @@ import javafx.scene.shape.Circle;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Randomly moves around the playing-field, waiting to be infected by {@link PlayerChar}
+ * <p>
+ * Has an {@link NPCType}, different types have different behaviors.
+ */
 public class NPC extends MovingSprite {
 
     private final Circle npcChar;
@@ -26,10 +32,10 @@ public class NPC extends MovingSprite {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.setFill(infected? INFECTED_NPC_COLOR:NORMAL_NPC_COLOR);
-        gc.fillOval(npcChar.getCenterX()-npcChar.getRadius(),
-                npcChar.getCenterY()-npcChar.getRadius(), npcChar.getRadius()*2,
-                npcChar.getRadius()*2);
+        gc.setFill(infected ? INFECTED_NPC_COLOR : NORMAL_NPC_COLOR);
+        gc.fillOval(npcChar.getCenterX() - npcChar.getRadius(),
+                npcChar.getCenterY() - npcChar.getRadius(), npcChar.getRadius() * 2,
+                npcChar.getRadius() * 2);
     }
 
     @Override
@@ -47,17 +53,17 @@ public class NPC extends MovingSprite {
 
     public void wallCollision(double elapsedTime) {
         //TODO Make Vector Reflection instead of random shit
-        velocityX = velocityX*-1;
-        velocityY = velocityY*-1;
+        velocityX = velocityX * -1;
+        velocityY = velocityY * -1;
         double angleChange = ThreadLocalRandom.current().nextDouble(-30, 30);
         velocityX += angleChange;
         velocityY -= angleChange;
 
-        if(velocityX > 70){
-            velocityX /=2;
+        if (velocityX > 70) {
+            velocityX /= 2;
         }
-        if(velocityY > 70){
-            velocityY /=2;
+        if (velocityY > 70) {
+            velocityY /= 2;
         }
 
     }

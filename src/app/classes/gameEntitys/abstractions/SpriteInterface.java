@@ -3,31 +3,26 @@ package app.classes.gameEntitys.abstractions;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 
-public interface SpriteInterface
-{
-    public void setPosition(double x, double y);
+public interface SpriteInterface {
+    void setPosition(double x, double y);
 
-    public void setVelocity(double x, double y);
+    void setVelocity(double x, double y);
 
-    public void addVelocity(double x, double y);
+    void addVelocity(double x, double y);
 
-    public void update(double time);
+    void update(double time);
 
-    public  void render(GraphicsContext gc);
-
+    void render(GraphicsContext gc);
 
     /**
-     * Returns an Bounds[] with all boundary Objects of a sprite
-     * @return
+     * @return a Bounds[] with all boundary Objects of a sprite
      */
-    public Bounds[] getBoundaries();
-
+    Bounds[] getBoundaries();
 
     /**
-     * Returns true if two SpriteIterface objects touch each other
-     * @param s is a Sprite Object
-     * @return
+     * @param s is an object implementing {@link SpriteInterface}
+     * @return true if two such objects touch
      */
-    public abstract boolean  intersects(SpriteInterface s);
+    boolean intersects(SpriteInterface s);
 
 }

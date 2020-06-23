@@ -1,6 +1,7 @@
 package app;
 
 import app.classes.Map;
+import app.classes.NPCType;
 import app.classes.mapEntities.MapNPC;
 import app.classes.mapEntities.MapPlayerChar;
 import app.classes.mapEntities.MapSprite;
@@ -58,8 +59,6 @@ public class WorldBuilderController extends Controller {
     private Rectangle wall = null;
     private double wallStartingX, wallStartingY;
     private MapSprite.SpriteType selectedSprite = MapSprite.SpriteType.WALL;
-    public static double scaleFactor; // standard: 1.2
-    // game sprites have to be scaled by this factor to work on a screen with dimensions 1920*1080.
 
     public WorldBuilderController() {
         this(new Map());
@@ -76,7 +75,7 @@ public class WorldBuilderController extends Controller {
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
         wallColorButton.setOnAction(e -> selectedSprite = MapSprite.SpriteType.WALL);
         wallColorButton.setTooltip(new Tooltip("Drag and Drop to paint a wall."));
-        npcChoiceBox.setItems(FXCollections.observableList(Arrays.stream(MapNPC.NpcType.values()).map(MapNPC.NpcType::getName).collect(Collectors.toList())));
+        npcChoiceBox.setItems(FXCollections.observableList(Arrays.stream(NPCType.values()).map(NPCType::getName).collect(Collectors.toList())));
         npcChoiceBox.setValue(npcChoiceBox.getItems().get(0));
         npcChoiceBox.setOnAction(e -> npcColorButton.fire());
         npcChoiceBox.setTooltip(new Tooltip("Select your preferred NPC type."));
@@ -152,7 +151,7 @@ public class WorldBuilderController extends Controller {
             }
             // if space is not occupied, place NPC
             else if (selectedSprite == MapSprite.SpriteType.NPC) {
-                MapNPC newNPC = new MapNPC(subSampledX, subSampledY, MapNPC.NpcType.values()[npcChoiceBox.getSelectionModel().getSelectedIndex()]);
+                MapNPC newNPC = new MapNPC(subSampledX, subSampledY, NPCType.values()[npcChoiceBox.getSelectionModel().getSelectedIndex()]);
                 if ((map.getWalls().size() == 0 || map.getWalls().stream().noneMatch(mapSprites -> mapSprites.intersects(newNPC))) &&
                         (map.getPlayer() == null || !map.getPlayer().intersects(newNPC)) &&
                         (map.getNpcs().size() == 0 || map.getNpcs().stream().noneMatch(mapSprites -> mapSprites.intersects(newNPC)))) {

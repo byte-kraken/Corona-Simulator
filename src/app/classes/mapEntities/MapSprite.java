@@ -3,7 +3,10 @@ package app.classes.mapEntities;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.paint.Color;
 
-public class MapSprite {
+/**
+ * Represents the position of a {@link app.classes.gameEntitys} on a {@link app.classes.Map}.
+ */
+public abstract class MapSprite {
     private final double width;
     private final double height;
     private final Color color;
@@ -55,6 +58,10 @@ public class MapSprite {
         return color;
     }
 
+    /**
+     * The different sprite types extending this object:
+     * {@link MapNPC}, {@link MapWall}, {@link MapPlayerChar}
+     */
     public enum SpriteType {
         NPC, WALL, PLAYER_CHAR
     }

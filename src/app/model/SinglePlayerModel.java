@@ -36,6 +36,7 @@ public class SinglePlayerModel {
         walls = new Wall[map.getWalls().size()];
 
         player = new PlayerChar(map.getPlayer().getStartPositionX(), map.getPlayer().getStartPositionY());
+
         for (int i = 0; i < map.getNpcs().size(); i++) {
             MapNPC mapNPC = map.getNpcs().get(i);
             npcs[i] = new NPC(mapNPC.getStartPositionX(), mapNPC.getStartPositionY());

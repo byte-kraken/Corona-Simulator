@@ -66,7 +66,7 @@ public class MainMenuController {
             primaryStage.setTitle("Corona Simulator");
             SinglePlayerMainController controller = loader.getController();
             SinglePlayerModel standardTestModel = new SinglePlayerModel();
-            standardTestModel.loadEntitiesFromMapInModel(Map.getStandardTestMap());
+            standardTestModel.loadEntitiesFromMapInModel(Map.getStandardTestMap2());
             controller.setKeyEventHandler();
             controller.setSinglePlayerModel(standardTestModel);
             controller.initStartScreen();

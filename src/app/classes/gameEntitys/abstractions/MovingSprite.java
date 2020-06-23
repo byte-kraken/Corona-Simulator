@@ -3,7 +3,7 @@ package app.classes.gameEntitys.abstractions;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 
-public abstract class MovingSprite extends NonMovingSprite implements SpriteInterface
+public abstract class MovingSprite extends NonMovingSprite
 {
 
     protected double velocityX;

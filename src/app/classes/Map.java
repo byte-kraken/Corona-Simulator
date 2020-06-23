@@ -29,6 +29,14 @@ public class Map implements Serializable {
     public Map() {
         this.npcs = new ArrayList<>();
         this.walls = new ArrayList<>();
+        addInvisibleMapBorder();
+    }
+
+    private void addInvisibleMapBorder(){
+        walls.add(new MapWall(-15,-15,mapSizeX+15,15));
+        walls.add(new MapWall(-15,mapSizeY+1,mapSizeX+15,15));
+        walls.add(new MapWall(-15,-15,15,mapSizeY+15));
+        walls.add(new MapWall(mapSizeX+1,-15,15,mapSizeY+15));
     }
 
     public MapPlayerChar getPlayer() {
@@ -49,6 +57,7 @@ public class Map implements Serializable {
 
     public static Map getStandardTestMap() {
         Map standardMap = new Map();
+        standardMap.setMapName("StandardTestMap");
         MapPlayerChar playerChar = new MapPlayerChar(584, 237);
         standardMap.setPlayer(playerChar);
 
@@ -63,6 +72,32 @@ public class Map implements Serializable {
 
         return standardMap;
     }
+
+    public static Map getStandardTestMap2(){
+        Map standardMap2 = new Map();
+        int sF = 3; //Scale Factor
+        standardMap2.setMapName("StandardTestMap2");
+        MapPlayerChar playerChar = new MapPlayerChar(64*sF,24*sF);
+        standardMap2.setPlayer(playerChar);
+
+        standardMap2.addWall(new MapWall(0*sF,64*sF,544*sF,8*sF));
+        standardMap2.addWall(new MapWall(120*sF,136*sF,522*sF,8*sF));
+        standardMap2.addWall(new MapWall(304*sF,144*sF,8*sF,72*sF));
+        standardMap2.addWall(new MapWall(304*sF,280*sF,8*sF,88*sF));
+        standardMap2.addWall(new MapWall(384*sF,176*sF,24*sF,40*sF));
+        standardMap2.addWall(new MapWall(384*sF,288*sF,24*sF,40*sF));
+        standardMap2.addWall(new MapWall(552*sF,200*sF,16*sF,72*sF));
+
+        standardMap2.addNPC(new MapNPC(480*sF,170*sF,  MapNPC.NpcType.Normal));
+        standardMap2.addNPC(new MapNPC(536*sF,320*sF,  MapNPC.NpcType.Normal));
+        standardMap2.addNPC(new MapNPC(496*sF,200*sF,  MapNPC.NpcType.Normal));
+        standardMap2.addNPC(new MapNPC(576*sF,176*sF,  MapNPC.NpcType.Normal));
+
+        return standardMap2;
+    }
+
+
+
 
     public static Color getVoidColor() {
         return VOID_COLOR;

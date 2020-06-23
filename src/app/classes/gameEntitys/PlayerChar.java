@@ -3,20 +3,35 @@ package app.classes.gameEntitys;
 import app.classes.gameEntitys.abstractions.MovingSprite;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class PlayerChar extends MovingSprite {
 
     private Circle player;
+    private Image image;
 
     public PlayerChar(double positionX, double positionY) {
         super(positionX, positionY);
         player = new Circle(positionX,positionY,50);
+        setImage("imgs\\VIRUS.png");
     }
 
     public void wallCollision(double time){
         update(time*-1);
+    }
+
+    public void setImage(String filename)
+    {
+        try {
+            image = new Image(new FileInputStream(filename));
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -29,9 +44,16 @@ public class PlayerChar extends MovingSprite {
     @Override
     public void render(GraphicsContext gc) {
         gc.setFill(Color.BLUE);
-        gc.fillOval(player.getCenterX()-player.getRadius(),
-                player.getCenterY()-player.getRadius(), player.getRadius()*2,
-                player.getRadius()*2);
+//        gc.fillOval(player.getCenterX()-player.getRadius(),
+//                player.getCenterY()-player.getRadius(), player.getRadius()*2,
+//                player.getRadius()*2);
+
+        if(image != null){
+            gc.drawImage( image, player.getCenterX()-player.getRadius(),
+                    player.getCenterY()-player.getRadius(), player.getRadius()*2,
+                    player.getRadius()*2);
+        }
+
 
 
         //Debug

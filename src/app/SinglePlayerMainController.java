@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static app.constants.Constants.STANDARD_MAP_SIZE_X;
 import static app.constants.Constants.STANDARD_MAP_SIZE_Y;
@@ -190,6 +191,17 @@ public class SinglePlayerMainController extends Controller {
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
 
+
+
+        Iterator<NPC> npcSetVeloIter = siPModel.getNPC_Iterator();
+        while (npcSetVeloIter.hasNext()) {
+            NPC npc = npcSetVeloIter.next();
+            npc.setVelocity(ThreadLocalRandom.current().nextDouble(-100, 100)
+                    ,ThreadLocalRandom.current().nextDouble(-100, 100));
+            //npc.setVelocity(0,-10);
+        }
+
+
         final Long[] lastNanoTime = {System.nanoTime()};
 
         new AnimationTimer() {
@@ -199,9 +211,22 @@ public class SinglePlayerMainController extends Controller {
                 double elapsedTime = (currentNanoTime - lastNanoTime[0]) / 1000000000.0;
                 lastNanoTime[0] = currentNanoTime;
 
-                //Process Input Start
+                Iterator<NPC> npcIterator;
+                Iterator<Wall> wallIter;
 
+                //Process Input Start
+                //Player Movement Start
                 applyPlayerInputs();
+                //Player Movement End
+                //NPC Movement Start
+
+                npcIterator = siPModel.getNPC_Iterator();
+                while (npcIterator.hasNext()) {
+                    NPC npc = npcIterator.next();
+                    npc.update(elapsedTime);
+                }
+
+                //NPC Movement END
 
 
                 //Process Input End
@@ -212,12 +237,25 @@ public class SinglePlayerMainController extends Controller {
 
 
                 //TODO Collision Detection Properly
-                Iterator<Wall> wallIter = siPModel.getWall_Iterator();
+                wallIter = siPModel.getWall_Iterator();
                 while (wallIter.hasNext()) {
                     Wall wall = wallIter.next();
                     if (wall.intersects(siPModel.getPlayer())) {
                         siPModel.getPlayer().wallCollision(elapsedTime);
                     }
+                }
+
+                npcIterator = siPModel.getNPC_Iterator();
+                while (npcIterator.hasNext()) {
+                    NPC npc = npcIterator.next();
+                    wallIter = siPModel.getWall_Iterator();
+                    while (wallIter.hasNext()) {
+                        Wall wall = wallIter.next();
+                        if (npc.intersects(wall)) {
+                            npc.wallCollision(elapsedTime);
+                        }
+                    }
+                    npc.update(elapsedTime);
                 }
 
 
@@ -232,21 +270,16 @@ public class SinglePlayerMainController extends Controller {
 
 
                 //drawDebugGrid(gc);
-
-
-
                 wallIter = siPModel.getWall_Iterator();
                 while (wallIter.hasNext()) {
                     Wall wall = wallIter.next();
                     wall.render(gc);
 //                    System.out.println(wall.toString());
                 }
-
-                Iterator<NPC> npcIterator = siPModel.getNPC_Iterator();
+                npcIterator = siPModel.getNPC_Iterator();
                 while (npcIterator.hasNext()) {
                     NPC npc = npcIterator.next();
                     npc.render(gc);
-//
                 }
                 //Render End
 

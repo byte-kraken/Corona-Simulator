@@ -293,15 +293,16 @@ public class WorldBuilderController extends Controller {
      */
     private void exportSprites() throws IllegalStateException, IOException {
         Map.serialize(npcSprites, wallSprites, virusSprite, socialDistancingCheckbox.isSelected(), increasedHygieneCheckbox.isSelected(), betterMedicineCheckbox.isSelected(), levelNameTextfield.getText());
-        /*
-
-        Properties properties = new Properties();
         if (virusSprite == null) {
             throw new IllegalStateException("Starting location for virus must be set.");
         }
         if (npcSprites.size() == 0) {
             throw new IllegalStateException("Starting location for NPCs must be set.");
         }
+        /*
+
+        Properties properties = new Properties();
+
         System.out.println("Social Distancing: " + socialDistancingCheckbox.isSelected());
         System.out.println("Increased Hygiene: " + increasedHygieneCheckbox.isSelected());
         System.out.println("Better Medicine: " + betterMedicineCheckbox.isSelected());

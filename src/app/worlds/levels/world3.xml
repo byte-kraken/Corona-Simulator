@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>add new World</comment>
+<entry key="npc4"> Position: [112.0,208.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc12"> Position: [464.0,256.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc34"> Position: [424.0,184.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc3"> Position: [40.0,176.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc13"> Position: [384.0,296.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc35"> Position: [448.0,272.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc2"> Position: [56.0,136.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc10"> Position: [464.0,32.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc32"> Position: [560.0,48.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc1"> Position: [64.0,8.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc11"> Position: [472.0,152.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc33"> Position: [416.0,96.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc8"> Position: [296.0,32.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc16"> Position: [264.0,160.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc38"> Position: [128.0,32.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc7"> Position: [112.0,72.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc17"> Position: [320.0,240.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc39"> Position: [8.0,88.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc6"> Position: [152.0,80.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc14"> Position: [368.0,248.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc36"> Position: [384.0,160.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc5"> Position: [168.0,176.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc15"> Position: [328.0,192.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc37"> Position: [208.0,24.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc18"> Position: [336.0,312.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc9"> Position: [376.0,16.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc19"> Position: [296.0,360.0] Velocity: [0.0,0.0]</entry>
+<entry key="virus"> Position: [216.0,216.0] Velocity: [0.0,0.0]</entry>
+<entry key="wall2"> Position: [184.0,48.0] Velocity: [0.0,0.0]</entry>
+<entry key="wall0"> Position: [0.0,248.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc0"> Position: [128.0,144.0] Velocity: [0.0,0.0]</entry>
+<entry key="wall1"> Position: [488.0,24.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc20"> Position: [216.0,344.0] Velocity: [0.0,0.0]</entry>
+<entry key="Increased Hygiene">true</entry>
+<entry key="npc23"> Position: [216.0,312.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc24"> Position: [480.0,336.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc21"> Position: [120.0,336.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc22"> Position: [48.0,360.0] Velocity: [0.0,0.0]</entry>
+<entry key="Social Distancing">true</entry>
+<entry key="npc27"> Position: [568.0,328.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc28"> Position: [568.0,240.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc25"> Position: [400.0,352.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc26"> Position: [536.0,328.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc29"> Position: [544.0,192.0] Velocity: [0.0,0.0]</entry>
+<entry key="npc30"> Position: [560.0,136.0] Velocity: [0.0,0.0]</entry>
+<entry key="Better Medicine">false</entry>
+<entry key="npc31"> Position: [536.0,80.0] Velocity: [0.0,0.0]</entry>
+</properties>

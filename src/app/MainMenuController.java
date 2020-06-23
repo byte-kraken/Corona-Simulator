@@ -2,6 +2,7 @@ package app;
 
 import app.classes.Map;
 import app.model.Model;
+import app.model.SinglePlayerMenuModel;
 import app.model.SinglePlayerModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,7 +39,7 @@ public class MainMenuController {
     }
 
     void armMainMenuButtons(Stage primaryStage) {
-        setSinglePlayerMainScene(primaryStage);
+        setSinglePlayerMenuScene(primaryStage);
         //setMultiPlayerScene(primaryStage);
         setWorldBuilderScene(primaryStage);
 
@@ -59,20 +60,13 @@ public class MainMenuController {
     /**
      * Loads the SinglePlayerButton and initializes the singlePlayerScene using {@link SinglePlayerMainController}.
      */
-    private void setSinglePlayerMainScene(Stage primaryStage) {
+    private void setSinglePlayerMenuScene(Stage primaryStage) {
         singlePlayerButton.setOnAction(event -> {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("singlePlayerMainUI.fxml"));
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("singlePlayerMenuUI.fxml"));
             loadScene(loader, primaryStage);
             primaryStage.setTitle("Corona Simulator");
-            SinglePlayerMainController controller = loader.getController();
-            SinglePlayerModel standardTestModel = new SinglePlayerModel();
-            standardTestModel.loadEntitiesFromMapInModel(Map.getStandardTestMap());
-            controller.setKeyEventHandler();
-            controller.setSinglePlayerModel(standardTestModel);
-            controller.initStartScreen();
-
-
-
+            SinglePlayerMenuController controller = loader.getController();
+            SinglePlayerMenuModel standardTestModel = new SinglePlayerMenuModel();
         });
     }
 

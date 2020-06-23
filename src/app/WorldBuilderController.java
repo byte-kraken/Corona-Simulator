@@ -9,8 +9,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import app.classes.Map;
 
 /**
  * Controller {@link Controller} for the WorldBuilder.
@@ -68,6 +75,7 @@ public class WorldBuilderController extends Controller {
     private Color color = WALL_COLOR;
     private double wallStartingX, wallStartingY;
 
+    private static String fs = System.getProperty("file.separator");
 
     public WorldBuilderController() {
         super();
@@ -86,12 +94,31 @@ public class WorldBuilderController extends Controller {
         virusColorButton.setTooltip(new Tooltip("Click to set virus spawn location."));
         saveButton.setOnAction(e -> {
             try {
-                exportSprites();
-                statusLabel.setTextFill(SUCCESSFUL_EXPORT);
-                statusLabel.setText("Successfully exported.");
+                File file = new File(System.getProperty("user.dir") + fs + "src" + fs + "app" + fs + "worlds" + fs + "ownWorlds" + fs + levelNameTextfield.getText() + ".xml");
+                if (levelNameTextfield.getText() != null && !levelNameTextfield.getText().isEmpty()) {
+
+                    if (!file.exists()) {
+                        exportSprites();
+                        statusLabel.setTextFill(SUCCESSFUL_EXPORT);
+                        statusLabel.setText("Successfully exported.");
+                    } else {
+                        statusLabel.setTextFill(ERRONEOUS_EXPORT);
+                        statusLabel.setText("This name is already taken. Please choose a valid name!");
+                    }
+                } else {
+                    statusLabel.setTextFill(ERRONEOUS_EXPORT);
+                    statusLabel.setText("Please choose a valid name!");
+                }
+
             } catch (IllegalStateException ex) {
                 statusLabel.setTextFill(ERRONEOUS_EXPORT);
                 statusLabel.setText(ex.getMessage());
+            } catch (FileNotFoundException ex) {
+                statusLabel.setTextFill(ERRONEOUS_EXPORT);
+                statusLabel.setText("File not found");
+            } catch (IOException ex) {
+                statusLabel.setTextFill(ERRONEOUS_EXPORT);
+                statusLabel.setText("Internal Error: Please check your world name");
             }
         });
         saveButton.setTooltip(new Tooltip("Save and export your map."));
@@ -264,33 +291,43 @@ public class WorldBuilderController extends Controller {
      * Exports all sprites and their position to a file.
      * Checks if all required map elements are present, otherwise {@throws IllegalStateException}
      */
-    private void exportSprites() throws IllegalStateException {
+    private void exportSprites() throws IllegalStateException, IOException {
+        Map.serialize(npcSprites, wallSprites, virusSprite, socialDistancingCheckbox.isSelected(), increasedHygieneCheckbox.isSelected(), betterMedicineCheckbox.isSelected(), levelNameTextfield.getText());
+        /*
+
+        Properties properties = new Properties();
         if (virusSprite == null) {
             throw new IllegalStateException("Starting location for virus must be set.");
         }
         if (npcSprites.size() == 0) {
             throw new IllegalStateException("Starting location for NPCs must be set.");
         }
-        if (levelNameTextfield.getCharacters() == null || levelNameTextfield.getCharacters().equals("")) {
-            throw new IllegalStateException("Level name must be set.");
-        }
-
-        // TODO: proper exporting
-        System.out.println("Level Name: " + levelNameTextfield.getCharacters());
         System.out.println("Social Distancing: " + socialDistancingCheckbox.isSelected());
         System.out.println("Increased Hygiene: " + increasedHygieneCheckbox.isSelected());
         System.out.println("Better Medicine: " + betterMedicineCheckbox.isSelected());
+        properties.setProperty("Social Distancing", Boolean.toString(socialDistancingCheckbox.isSelected()));
+        properties.setProperty("Increased Hygiene", Boolean.toString(increasedHygieneCheckbox.isSelected()));
+        properties.setProperty("Better Medicine", Boolean.toString(betterMedicineCheckbox.isSelected()));
 
         if (wallSprites.size() > 0) {
             System.out.println("Walls:");
             wallSprites.forEach(sprite -> System.out.println(sprite.toString()));
+            for (int i = 0; i < wallSprites.size(); i++) {
+                properties.setProperty("wall" + i, wallSprites.get(i).toString());
+            }
         }
         System.out.println("NPCs:");
         npcSprites.forEach(sprite -> System.out.println(sprite.toString()));
-
+        for (int i = 0; i < npcSprites.size(); i++) {
+            properties.setProperty("npc" + i, npcSprites.get(i).toString());
+        }
         System.out.println("Virus:");
         System.out.println(virusSprite.toString());
-
+        properties.setProperty("virus", virusSprite.toString());
+        File file = new File(System.getProperty("user.dir") + fs + "src" + fs + "app" + fs + "worlds" + fs + "ownWorlds" + fs + levelNameTextfield.getText() + ".xml");
+        file.createNewFile();
+        properties.storeToXML(new FileOutputStream(file), "add new World");
+         */
     }
 
 }

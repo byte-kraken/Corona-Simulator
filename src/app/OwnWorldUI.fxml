@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<GridPane alignment="center" hgap="10" prefHeight="143.0" prefWidth="309.0" vgap="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.OwnWorldController">
+    <columnConstraints>
+        <ColumnConstraints />
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+        <RowConstraints />
+    </rowConstraints>
+    <VBox alignment="CENTER" prefWidth="309.0" GridPane.valignment="CENTER">
+        <TextField fx:id="levelNameTextfield" alignment="TOP_CENTER" promptText="Enter Levelname" />
+        <Button fx:id="exitButton" cancelButton="true" minHeight="100.0" minWidth="100.0" mnemonicParsing="false" text="Back to Main Menu">
+            <font>
+                <Font size="30.0" />
+            </font>
+        </Button>
+    </VBox>
+</GridPane>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--suppress JavaFxDefaultTag -->
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -26,8 +27,8 @@
                     </ScrollPane>
                 </content>
             </TitledPane>
-            <TitledPane animated="false" contentDisplay="CENTER" prefHeight="523.0" prefWidth="1714.0"
-                        text="own Worlds" GridPane.rowIndex="1">
+            <TitledPane animated="false" contentDisplay="CENTER" prefHeight="523.0" prefWidth="1714.0" text="own Worlds"
+                        GridPane.rowIndex="1">
                 <content>
                     <ScrollPane fx:id="ownWorlds" prefHeight="200.0" prefWidth="200.0"/>
                 </content>

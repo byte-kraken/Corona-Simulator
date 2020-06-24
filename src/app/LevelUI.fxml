@@ -3,7 +3,6 @@
 <!--suppress JavaFxDefaultTag -->
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <AnchorPane prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/11.0.1"
@@ -33,16 +32,11 @@
                     <ScrollPane fx:id="ownWorlds" prefHeight="200.0" prefWidth="200.0"/>
                 </content>
             </TitledPane>
-            <ImageView fitHeight="200.0" fitWidth="145.0" GridPane.columnIndex="1">
-                <image>
-                    <Image url="@../../imgs/Career.png"/>
-                </image>
-            </ImageView>
-            <ImageView fitHeight="200.0" fitWidth="205.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                <image>
-                    <Image url="@../../imgs/Sandbox.png"/>
-                </image>
-            </ImageView>
+            <ImageView fx:id="careerView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"
+                       GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER"/>
+            <ImageView fx:id="sandBoxView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"
+                       GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                       GridPane.valignment="CENTER"/>
         </GridPane>
         <Button fx:id="backToMainMenu" mnemonicParsing="false" prefHeight="180.0" prefWidth="1925.0"
                 text="Back to Main Menu"/>

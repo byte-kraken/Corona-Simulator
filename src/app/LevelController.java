@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -22,7 +24,12 @@ public class LevelController extends Controller {
     private ScrollPane levels;
     @FXML
     private Button backToMainMenu;
+    @FXML
+    private ImageView careerView;
+    @FXML
+    private ImageView sandBoxView;
 
+    private final String fs = System.getProperty("file.separator");
     private final ArrayList<Button> ownWorldButtons = new ArrayList<>();
     private final ArrayList<Button> levelButtons = new ArrayList<>();
 
@@ -32,6 +39,8 @@ public class LevelController extends Controller {
     }
 
     public void initialize() {
+        careerView.setImage(new Image("file:imgs/Career.png"));
+        sandBoxView.setImage(new Image("file:imgs/SandBox.png"));
         String fs = System.getProperty("file.separator");
         File folderLevels = new File("src" + fs + "app" + fs + "worlds" + fs + "levels");
         createButtons(folderLevels, levelButtons, levels);
@@ -42,7 +51,6 @@ public class LevelController extends Controller {
     }
 
     public void armButtons() {
-        String fs = System.getProperty("file.separator");
         levelButtons.forEach(b -> {
             b.setMinSize(850, 230);
             String path = "src" + fs + "app" + fs + "worlds" + fs + "levels" + fs + b.getText();

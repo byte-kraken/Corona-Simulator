@@ -1,5 +1,6 @@
 package app.classes;
 
+import app.util.SerializableColor;
 import javafx.scene.paint.Color;
 
 /**
@@ -22,7 +23,7 @@ public enum NPCType {
         return name;
     }
 
-    public Color getColor() {
-        return color;
+    public SerializableColor getColor() {
+        return new SerializableColor(color);
     }
 }

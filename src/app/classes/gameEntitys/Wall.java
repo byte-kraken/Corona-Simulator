@@ -20,7 +20,7 @@ public class Wall extends NonMovingSprite {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.setFill(MapWall.COLOR);
+        gc.setFill(MapWall.COLOR.getFXColor());
         gc.fillRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
 
 

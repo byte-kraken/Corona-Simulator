@@ -1,6 +1,7 @@
 package app.classes.mapEntities;
 
-import app.constants.Constants;
+import app.util.Constants;
+import app.util.SerializableColor;
 import javafx.scene.paint.Color;
 
 /**
@@ -8,13 +9,13 @@ import javafx.scene.paint.Color;
  */
 public class MapPlayerChar extends MapSprite {
 
-    public static final Color COLOR = Color.GREEN;
+    public static final SerializableColor COLOR = new SerializableColor(Color.GREEN);
 
     public MapPlayerChar(double xStartPoint, double yStartPoint) {
         this(xStartPoint, yStartPoint, COLOR);
     }
 
-    public MapPlayerChar(double xStartPoint, double yStartPoint, Color color) {
+    public MapPlayerChar(double xStartPoint, double yStartPoint, SerializableColor color) {
         super(xStartPoint, yStartPoint, Constants.PIXEL_SIZE, Constants.PIXEL_SIZE, color);
     }
 
@@ -22,7 +23,7 @@ public class MapPlayerChar extends MapSprite {
         this(xStartPoint, yStartPoint, width, height, COLOR);
     }
 
-    public MapPlayerChar(double xStartPoint, double yStartPoint, double width, double height, Color color) {
+    public MapPlayerChar(double xStartPoint, double yStartPoint, double width, double height, SerializableColor color) {
         super(xStartPoint, yStartPoint, width, height, color);
     }
 }

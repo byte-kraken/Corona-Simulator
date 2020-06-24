@@ -5,11 +5,11 @@ import app.classes.mapEntities.MapPlayerChar;
 import app.classes.mapEntities.MapWall;
 import javafx.scene.paint.Color;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 
-import static app.constants.Constants.STANDARD_MAP_SIZE_X;
-import static app.constants.Constants.STANDARD_MAP_SIZE_Y;
+import static app.util.Constants.STANDARD_MAP_SIZE_X;
+import static app.util.Constants.STANDARD_MAP_SIZE_Y;
 
 /**
  * The container object for levels.
@@ -154,5 +154,22 @@ public class Map implements Serializable {
 
     public double getScaleFactor() {
         return scaleFactor;
+    }
+
+    public static void serialize(Map map, String path) throws IOException {
+        FileOutputStream f = new FileOutputStream(new File(path));
+        ObjectOutputStream o = new ObjectOutputStream(f);
+        o.writeObject(map);
+        o.close();
+        f.close();
+    }
+
+    public static Map deserialize(String path) throws IOException, ClassNotFoundException {
+        FileInputStream fi = new FileInputStream(new File(path));
+        ObjectInputStream oi = new ObjectInputStream(fi);
+        Map map = (Map) oi.readObject();
+        oi.close();
+        fi.close();
+        return map;
     }
 }

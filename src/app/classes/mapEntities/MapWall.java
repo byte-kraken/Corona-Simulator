@@ -1,5 +1,6 @@
 package app.classes.mapEntities;
 
+import app.util.SerializableColor;
 import javafx.scene.paint.Color;
 
 /**
@@ -7,13 +8,13 @@ import javafx.scene.paint.Color;
  */
 public class MapWall extends MapSprite {
 
-    public static final Color COLOR = Color.BLACK;
+    public static final SerializableColor COLOR = new SerializableColor(Color.BLACK);
 
     public MapWall(double positionX, double positionY, double width, double height) {
         this(positionX, positionY, width, height, COLOR);
     }
 
-    public MapWall(double positionX, double positionY, double width, double height, Color color) {
+    public MapWall(double positionX, double positionY, double width, double height, SerializableColor color) {
         super(positionX, positionY, width, height, color);
     }
 

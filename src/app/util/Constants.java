@@ -1,4 +1,4 @@
-package app.constants;
+package app.util;
 
 public final class Constants {
     public static final int STANDARD_MAP_SIZE_X = 1920;

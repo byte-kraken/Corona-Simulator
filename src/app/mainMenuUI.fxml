@@ -22,12 +22,6 @@
                 <Font size="30.0"/>
             </font>
         </Button>
-        <Button fx:id="multiPlayerButton" alignment="CENTER" contentDisplay="CENTER" minHeight="200.0"
-                minWidth="300.0" mnemonicParsing="false" text="Multiplayer" textAlignment="CENTER">
-            <font>
-                <Font size="30.0"/>
-            </font>
-        </Button>
         <Button fx:id="worldBuilderButton" alignment="CENTER" contentDisplay="CENTER" minHeight="200.0"
                 minWidth="300.0" mnemonicParsing="false" text="World Builder" textAlignment="CENTER">
             <font>

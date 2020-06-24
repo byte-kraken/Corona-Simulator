@@ -1,8 +1,6 @@
 package app;
 
-import app.classes.Map;
 import app.model.Model;
-import app.model.SinglePlayerModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,7 +18,7 @@ import java.io.IOException;
  */
 public class MainMenuController {
 
-    private final Model model;
+    private static final Model model = new Model();
 
     //private Fields can be read by FXML-File if annotated like this
     @FXML
@@ -28,18 +26,14 @@ public class MainMenuController {
     @FXML
     private Button worldBuilderButton;
     @FXML
-    private Button multiPlayerButton;
-    @FXML
     private Button exitButton;
 
 
     public MainMenuController() { //loaded from FXMLLoader
-        model = new Model();
     }
 
     void armMainMenuButtons(Stage primaryStage) {
         setSinglePlayerMainScene(primaryStage);
-        //setMultiPlayerScene(primaryStage);
         setWorldBuilderScene(primaryStage);
 
         exitButton.setOnAction(event -> closeStage(primaryStage));
@@ -61,31 +55,13 @@ public class MainMenuController {
      */
     private void setSinglePlayerMainScene(Stage primaryStage) {
         singlePlayerButton.setOnAction(event -> {
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("singlePlayerMainUI.fxml"));
+            final FXMLLoader loader = new FXMLLoader(getClass().getResource("LevelUI.fxml"));
             loadScene(loader, primaryStage);
-            primaryStage.setTitle("Corona Simulator");
-            SinglePlayerMainController controller = loader.getController();
-            SinglePlayerModel standardTestModel = new SinglePlayerModel();
-            standardTestModel.loadEntitiesFromMapInModel(Map.getStandardTestMap2());
-            controller.setKeyEventHandler();
-            controller.setSinglePlayerModel(standardTestModel);
-            controller.initStartScreen();
-
-
+            primaryStage.setTitle("Level select ");
+            primaryStage.setFullScreen(true);
+            LevelController controller = loader.getController();
+            controller.armButtons();
         });
-    }
-
-    /**
-     * Loads the multiPlayerButton and initializes the multiPlayerScene using {@link MultiPlayerController}.
-     */
-    private void setMultiPlayerScene(Stage primaryStage) {
-        multiPlayerButton.setOnAction(event -> {
-            //TODO: Implement multiPlayerUI.fxml
-            final FXMLLoader loader = new FXMLLoader(getClass().getResource("multiPlayerUI.fxml"));
-            loadScene(loader, primaryStage);
-        });
-
-        //TODO: implement
     }
 
     /**
@@ -108,7 +84,7 @@ public class MainMenuController {
      * <p>
      * Helper method for creating various scenes and passing required parameters.
      */
-    private void loadScene(FXMLLoader loader, Stage primaryStage) {
+    static void loadScene(FXMLLoader loader, Stage primaryStage) {
         Parent root;
         try {
             root = loader.load();

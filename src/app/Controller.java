@@ -35,5 +35,6 @@ class Controller {
 
     void returnToPreviousScene() {
         primaryStage.setScene(previousScene);
+        primaryStage.setFullScreen(true);
     }
 }

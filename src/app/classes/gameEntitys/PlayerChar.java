@@ -47,7 +47,7 @@ public class PlayerChar extends MovingSprite {
 
     @Override
     public void render(GraphicsContext gc) {
-        gc.setFill(MapPlayerChar.COLOR);
+        gc.setFill(MapPlayerChar.COLOR.getFXColor());
 //        gc.fillOval(player.getCenterX()-player.getRadius(),
 //                player.getCenterY()-player.getRadius(), player.getRadius()*2,
 //                player.getRadius()*2);

@@ -6,7 +6,7 @@ import app.classes.mapEntities.MapNPC;
 import app.classes.mapEntities.MapPlayerChar;
 import app.classes.mapEntities.MapSprite;
 import app.classes.mapEntities.MapWall;
-import app.constants.Constants;
+import app.util.Constants;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
@@ -17,6 +17,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -87,13 +90,33 @@ public class WorldBuilderController extends Controller {
         virusColorButton.setTooltip(new Tooltip("Click to set virus spawn location."));
         saveButton.setOnAction(e -> {
             try {
-                exportSprites();
-                statusLabel.setTextFill(SUCCESSFUL_EXPORT_COLOR);
-                statusLabel.setText("Successfully exported.");
+                String fs = System.getProperty("file.separator");
+                File file = new File("src" + fs + "app" + fs + "worlds" + fs + levelNameTextfield.getText());
+                if (levelNameTextfield.getText() != null && !levelNameTextfield.getText().isEmpty()) {
+                    if (!file.exists()) {
+                        exportSprites();
+                        statusLabel.setTextFill(SUCCESSFUL_EXPORT_COLOR);
+                        statusLabel.setText("Successfully exported.");
+                    } else {
+                        statusLabel.setTextFill(ERRONEOUS_EXPORT_COLOR);
+                        statusLabel.setText("This name is already taken. Please choose a valid name!");
+                    }
+                } else {
+                    statusLabel.setTextFill(ERRONEOUS_EXPORT_COLOR);
+                    statusLabel.setText("Please choose a valid name!");
+                }
+
             } catch (IllegalStateException ex) {
                 statusLabel.setTextFill(ERRONEOUS_EXPORT_COLOR);
                 statusLabel.setText(ex.getMessage());
+            } catch (FileNotFoundException ex) {
+                statusLabel.setTextFill(ERRONEOUS_EXPORT_COLOR);
+                statusLabel.setText("File not found");
+            } catch (IOException ex) {
+                statusLabel.setTextFill(ERRONEOUS_EXPORT_COLOR);
+                statusLabel.setText("Internal Error: Please check your world name");
             }
+
         });
         saveButton.setTooltip(new Tooltip("Save and export your map."));
         socialDistancingCheckbox.setTooltip(new Tooltip("NPCs will avoid each other."));
@@ -225,14 +248,14 @@ public class WorldBuilderController extends Controller {
 
         // paints wall and NPC sprites
         Stream.concat(map.getWalls().stream(), map.getNpcs().stream()).forEach(mapSprite -> {
-            graphicsContext.setFill(mapSprite.getColor());
+            graphicsContext.setFill(mapSprite.getColor().getFXColor());
             graphicsContext.fillRect(mapSprite.getBoundary().getMinX(), mapSprite.getBoundary().getMinY(),
                     mapSprite.getBoundary().getWidth(), mapSprite.getBoundary().getHeight());
         });
 
         // paints virus
         if (map.getPlayer() != null) {
-            graphicsContext.setFill(map.getPlayer().getColor());
+            graphicsContext.setFill(map.getPlayer().getColor().getFXColor());
             graphicsContext.fillRect(map.getPlayer().getBoundary().getMinX(), map.getPlayer().getBoundary().getMinY(),
                     map.getPlayer().getBoundary().getWidth(), map.getPlayer().getBoundary().getHeight());
         }
@@ -268,22 +291,22 @@ public class WorldBuilderController extends Controller {
      * Exports all sprites and their position to a file.
      * Checks if all required map elements are present, otherwise {@throws IllegalStateException}
      */
-    private void exportSprites() throws IllegalStateException {
+    private void exportSprites() throws IllegalStateException, IOException {
         if (map.getPlayer() == null) {
             throw new IllegalStateException("Starting location for virus must be set.");
         }
         if (map.getNpcs().size() == 0) {
             throw new IllegalStateException("Starting location for NPCs must be set.");
         }
-        if (levelNameTextfield.getCharacters() == null || levelNameTextfield.getCharacters().toString().equals("")) {
+        if (levelNameTextfield.getText() == null || levelNameTextfield.getText().equals("")) {
             throw new IllegalStateException("Level name must be set.");
         }
-        map.setMapName(levelNameTextfield.getCharacters().toString());
+        map.setMapName(levelNameTextfield.getText());
         map.setSocialDistancing(socialDistancingCheckbox.isSelected());
         map.setBetterMedicine(betterMedicineCheckbox.isSelected());
         map.setIncreasedHygiene(increasedHygieneCheckbox.isSelected());
-
-        // TODO: proper exporting
+        String fs = System.getProperty("file.separator");
+        Map.serialize(map, "src" + fs + "app" + fs + "worlds" + fs + "ownWorlds" + fs + map.getMapName());
         System.out.println("Level Name: " + levelNameTextfield.getCharacters());
         System.out.println("Social Distancing: " + socialDistancingCheckbox.isSelected());
         System.out.println("Increased Hygiene: " + increasedHygieneCheckbox.isSelected());

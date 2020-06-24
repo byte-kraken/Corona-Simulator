@@ -26,8 +26,8 @@ import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static app.constants.Constants.STANDARD_MAP_SIZE_X;
-import static app.constants.Constants.STANDARD_MAP_SIZE_Y;
+import static app.util.Constants.STANDARD_MAP_SIZE_X;
+import static app.util.Constants.STANDARD_MAP_SIZE_Y;
 
 /**
  * Controller {@link Controller} for the SinglePlayerMode.
@@ -179,8 +179,8 @@ public class SinglePlayerMainController extends Controller {
 
     /**
      * Main game method. Starts the Game Loop.
-     *
-     * Can only be started after {@link #initStartScreen()} has benn called before}
+     * <p>
+     * Can only be started after {@link #initStartScreen()} has been called before}
      */
     public void startGame() {
         if (!startScreenInitialized) {

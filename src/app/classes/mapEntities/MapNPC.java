@@ -1,7 +1,7 @@
 package app.classes.mapEntities;
 
 import app.classes.NPCType;
-import app.constants.Constants;
+import app.util.Constants;
 
 /**
  * The {@link MapSprite} representing an {@link app.classes.gameEntitys.NPC}.

@@ -1,19 +1,21 @@
 package app.classes.mapEntities;
 
+import app.util.SerializableColor;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.paint.Color;
+
+import java.io.Serializable;
 
 /**
  * Represents the position of a {@link app.classes.gameEntitys} on a {@link app.classes.Map}.
  */
-public abstract class MapSprite {
+public abstract class MapSprite implements Serializable {
     private final double width;
     private final double height;
-    private final Color color;
+    private final SerializableColor color;
     private double startPositionX;
     private double startPositionY;
 
-    public MapSprite(double x, double y, double width, double height, Color color) {
+    public MapSprite(double x, double y, double width, double height, SerializableColor color) {
         startPositionX = x;
         startPositionY = y;
         this.width = width;
@@ -54,7 +56,7 @@ public abstract class MapSprite {
         return height;
     }
 
-    public Color getColor() {
+    public SerializableColor getColor() {
         return color;
     }
 

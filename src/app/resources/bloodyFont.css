@@ -1,0 +1,11 @@
+/**
+* Adapted from {@see https://allfont.net/allfont.css?fonts=bloody}
+ */
+@font-face {
+    font-family: 'Bloody';
+    src: url('bloody.ttf');
+}
+
+.text {
+    -fx-font-family: "Bloody";
+}

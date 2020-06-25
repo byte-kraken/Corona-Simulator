@@ -14,15 +14,15 @@ import javafx.stage.Stage;
  */
 class Controller {
 
-    private Stage primaryStage;
+    private static Stage primaryStage;
     private Scene previousScene;
     Model globalModel ;
 
     void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+        Controller.primaryStage = primaryStage;
     }
 
-    Stage getPrimaryStage() {
+    static Stage getPrimaryStage() {
         return primaryStage;
     }
 

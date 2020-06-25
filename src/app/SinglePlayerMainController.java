@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,6 +47,10 @@ public class SinglePlayerMainController extends Controller {
     private Button toMainMenuButton;
     @FXML
     private Canvas gameCanvas;
+    @FXML
+    private Label label;
+    @FXML
+    private Label infectionLabel;
 
     // Input Buffer
     private ArrayList<String> input;
@@ -65,6 +70,12 @@ public class SinglePlayerMainController extends Controller {
     }
 
     public void initialize() {
+        File f = new File("src/app/resources/bloodyFont.css");
+        nrInfectedLabel.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
+        infectionLabel.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
+        nrInfectedLabel.setStyle("-fx-font-family: Bloody");
+        infectionLabel.setStyle("-fx-font-family: Bloody");
+        label.setVisible(false);
         assert mainAnchorPane != null : "fx:id=\"mainAnchorPane\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert nrInfectedLabel != null : "fx:id=\"nrInfectedLabel\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert toMainMenuButton != null : "fx:id=\"toMainMenuButton\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
@@ -276,10 +287,15 @@ public class SinglePlayerMainController extends Controller {
                 }
                 //Render End
 
-                if(siPModel.allNPCsAreInfected()){
-                    gc.setFill(Color.GREEN);
+                if(siPModel.allNPCsAreInfected()) {
+                    label.setVisible(true);
+                    File fi = new File("src/app/resources/bloodyFont.css");
+                    label.getStylesheets().add("file:///" + fi.getAbsolutePath().replace("\\", "/"));
+                    label.setText("You infected all inhabitants of this world. Are you not ashamed of yourself? \n Press Cancel to return and infect more innocent circles.");
+                    label.setStyle("-fx-font-family: bloody");
+                    /*gc.setFill(Color.GREEN);
                     gc.fillText("You infected all inhabitants of this world. Are you not ashamed of yourself?", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) - 50);
-                    gc.fillText("Press Cancel to return and infect more innocent circles.", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) );
+                    gc.fillText("Press Cancel to return and infect more innocent circles.", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) );*/
                     this.stop();
                 }
             }

@@ -4,33 +4,38 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
 <AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.SinglePlayerMainController">
      <Canvas fx:id="gameCanvas" height="1080.0" layoutX="40.0" layoutY="23.0" width="1920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
      <HBox prefHeight="119.0" prefWidth="428.0" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
-         <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="119.0" prefWidth="151.0" text="Infected:" textAlignment="CENTER">
+         <Label fx:id="infectionLabel" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="119.0"
+                prefWidth="151.0" text="Infected:" textAlignment="CENTER" textFill="RED">
              <font>
-                 <Font size="32.0" />
+                 <Font size="32.0"/>
              </font>
              <opaqueInsets>
-                 <Insets />
+                 <Insets/>
              </opaqueInsets>
              <padding>
-                 <Insets right="20.0" />
+                 <Insets right="20.0"/>
              </padding>
          </Label>
-         <Label fx:id="nrInfectedLabel" prefHeight="121.0" prefWidth="73.0" text="0">
+         <Label fx:id="nrInfectedLabel" prefHeight="121.0" prefWidth="73.0" text="0" textFill="RED">
              <font>
-                 <Font size="32.0" />
+                 <Font size="32.0"/>
              </font>
          </Label>
          <Button fx:id="toMainMenuButton" mnemonicParsing="false" prefHeight="119.0" prefWidth="188.0" text="Cancel">
              <font>
-                 <Font name="System Bold" size="27.0" />
+                 <Font name="System Bold" size="27.0"/>
              </font>
          </Button>
      </HBox>
+    <Label fx:id="label" alignment="CENTER" layoutX="-2.0" layoutY="514.0" prefHeight="199.0" prefWidth="1920.0"
+           textFill="RED">
+        <font>
+            <Font size="40.0"/>
+        </font>
+    </Label>
 </AnchorPane>

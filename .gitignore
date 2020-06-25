@@ -1,4 +1,3 @@
-
 # Created by https://www.gitignore.io/api/java,windows,intellij
 # Edit at https://www.gitignore.io/?templates=java,windows,intellij
 
@@ -142,3 +141,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/java,windows,intellij
+
+# Output folder for own worlds and tmp worlds
+/worlds/ownWorlds/
+/worlds/tmp/

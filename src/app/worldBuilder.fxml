@@ -14,7 +14,7 @@
             </VBox.margin>
         </TextField>
         <HBox alignment="BOTTOM_CENTER">
-            <Button fx:id="voidColorButton" mnemonicParsing="false" text="Delete">
+            <Button fx:id="deleteEntityButton" mnemonicParsing="false" text="Delete Entity">
                 <opaqueInsets>
                     <Insets left="10.0" right="10.0"/>
                 </opaqueInsets>
@@ -22,7 +22,7 @@
                     <Insets right="10.0"/>
                 </HBox.margin>
             </Button>
-            <Button fx:id="wallColorButton" mnemonicParsing="false" text="Wall">
+            <Button fx:id="wallCreateButton" mnemonicParsing="false" text="Wall">
                 <opaqueInsets>
                     <Insets left="10.0" right="10.0"/>
                 </opaqueInsets>
@@ -30,7 +30,7 @@
                     <Insets right="10.0"/>
                 </HBox.margin>
             </Button>
-            <Button fx:id="npcColorButton" mnemonicParsing="false" text="NPC">
+            <Button fx:id="npcCreateButton" mnemonicParsing="false" text="NPC">
                 <opaqueInsets>
                     <Insets left="10.0" right="10.0"/>
                 </opaqueInsets>
@@ -92,6 +92,17 @@
             </padding>
         </Label>
         <HBox alignment="BOTTOM_CENTER" prefHeight="13.0" prefWidth="1920.0">
+            <Button fx:id="deleteAllButton" mnemonicParsing="false" text="New World">
+                <HBox.margin>
+                    <Insets right="10.0"/>
+                </HBox.margin>
+            </Button>
+            <Button fx:id="loadWorldButton" mnemonicParsing="false" text="Load World"/>
+            <ChoiceBox fx:id="loadWorldChoiceBox" prefWidth="150.0">
+                <HBox.margin>
+                    <Insets right="10.0"/>
+                </HBox.margin>
+            </ChoiceBox>
             <Button fx:id="saveButton" mnemonicParsing="false" text="Save World" textAlignment="CENTER">
                 <opaqueInsets>
                     <Insets left="10.0" right="10.0"/>

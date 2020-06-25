@@ -103,7 +103,6 @@ public class MainMenuController {
             WorldBuilderController controller = loader.getController();
             controller.armCanvas(); //canvas has to be loaded after scene was created
         });
-        //TODO: Resources Folder where own levels can be saved and own ones can be loaded from
     }
 
     /**

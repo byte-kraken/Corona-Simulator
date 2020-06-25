@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
+import static app.util.Constants.LEVELS_FOLDER_PATH;
+import static app.util.Constants.OWN_WORLDS_FOLDER_PATH;
+
 public class LevelController extends Controller {
     @FXML
     private ScrollPane ownWorlds;
@@ -32,26 +35,22 @@ public class LevelController extends Controller {
     }
 
     public void initialize() {
-        String fs = System.getProperty("file.separator");
-        File folderLevels = new File("src" + fs + "app" + fs + "worlds" + fs + "levels");
+        File folderLevels = new File(LEVELS_FOLDER_PATH);
         createButtons(folderLevels, levelButtons, levels);
-        File folderOwnWorlds = new File("src" + fs + "app" + fs + "worlds" + fs + "ownWorlds");
+        File folderOwnWorlds = new File(OWN_WORLDS_FOLDER_PATH);
         createButtons(folderOwnWorlds, ownWorldButtons, ownWorlds);
         backToMainMenu.setOnAction(e -> returnToPreviousScene());
         backToMainMenu.setFocusTraversable(false);
     }
 
     public void armButtons() {
-        String fs = System.getProperty("file.separator");
         levelButtons.forEach(b -> {
             b.setMinSize(850, 230);
-            String path = "src" + fs + "app" + fs + "worlds" + fs + "levels" + fs + b.getText();
-            b.setOnAction(e -> loadStage(path));
+            b.setOnAction(e -> loadStage(LEVELS_FOLDER_PATH + b.getText()));
         });
         ownWorldButtons.forEach(b -> {
             b.setMinSize(850, 230);
-            String path = "src" + fs + "app" + fs + "worlds" + fs + "ownWorlds" + fs + b.getText();
-            b.setOnAction(e -> loadStage(path));
+            b.setOnAction(e -> loadStage(OWN_WORLDS_FOLDER_PATH + b.getText()));
         });
     }
 

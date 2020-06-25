@@ -21,21 +21,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static app.util.Constants.OWN_WORLDS_FOLDER_PATH;
+import static app.util.Constants.TMP_WORLD_PATH;
 
 /**
  * Controller {@link Controller} for the WorldBuilder.
  * <p>
- * Allows for painting, syntax-checking and exporting of user-generated levels.
+ * Allows for painting, syntax-checking and exporting of user-generated {@link Map}.
  * Painted shapes are stored as serialized {@link MapSprite}.
- * <p>
- *
- * @author Felix Ferchhumer
  */
 public class WorldBuilderController extends Controller {
     @FXML
-    private ChoiceBox<String> npcChoiceBox;
+    private ChoiceBox<String> npcChoiceBox, loadWorldChoiceBox;
     @FXML
     private TextField levelNameTextfield;
     @FXML
@@ -45,7 +46,7 @@ public class WorldBuilderController extends Controller {
     @FXML
     private CheckBox socialDistancingCheckbox, increasedHygieneCheckbox, betterMedicineCheckbox;
     @FXML
-    private Button wallColorButton, npcColorButton, voidColorButton, virusColorButton, saveButton, toMainMenuButton;
+    private Button wallCreateButton, npcCreateButton, deleteEntityButton, deleteAllButton, virusColorButton, saveButton, toMainMenuButton, loadWorldButton;
 
     // Sprite Colors
     private static final Color VOID_COLOR = Map.getVoidColor();
@@ -58,40 +59,75 @@ public class WorldBuilderController extends Controller {
     private static final Color NEUTRAL_MESSAGE_COLOR = Color.DARKBLUE;
 
     // Misc
-    private final Map map;
+    private Map map;
+    private boolean tmpFileLoaded = false;
+    private boolean mapExported = false;
+    private final String workingDirectory = OWN_WORLDS_FOLDER_PATH; // change to LEVELS_FOLDER_PATH for level creation
     private Rectangle wall = null;
     private double wallStartingX, wallStartingY;
     private MapSprite.SpriteType selectedSprite = MapSprite.SpriteType.WALL;
 
     public WorldBuilderController() {
-        this(new Map());
-    }
-
-    public WorldBuilderController(Map map) {
         super();
-        this.map = map;
+        Map loadedTmpMap;
+        String path = TMP_WORLD_PATH;
+        File tmpFile = new File(path);
+        if (tmpFile.exists()) {
+            try {
+                loadedTmpMap = Map.deserialize(path);
+                tmpFileLoaded = true;
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                loadedTmpMap = new Map();
+            }
+        } else {
+            loadedTmpMap = new Map();
+        }
+        this.map = loadedTmpMap;
     }
 
+    /**
+     * Loads and arms all FXML elements, where possible.
+     */
     public void initialize() {
+        toMainMenuButton.setOnAction(e -> returnToPreviousScene());
+
         statusLabel.setTextFill(NEUTRAL_MESSAGE_COLOR);
         statusLabel.setText("Use the controls at the top to draw and name your level. Press " + saveButton.getText() + " when you are done!");
-        toMainMenuButton.setOnAction(e -> returnToPreviousScene());
-        wallColorButton.setOnAction(e -> selectedSprite = MapSprite.SpriteType.WALL);
-        wallColorButton.setTooltip(new Tooltip("Drag and Drop to paint a wall."));
+
+        wallCreateButton.setOnAction(e -> selectedSprite = MapSprite.SpriteType.WALL);
+        wallCreateButton.setTooltip(new Tooltip("Drag and Drop to paint a wall."));
+
         npcChoiceBox.setItems(FXCollections.observableList(Arrays.stream(NPCType.values()).map(NPCType::getName).collect(Collectors.toList())));
         npcChoiceBox.setValue(npcChoiceBox.getItems().get(0));
-        npcChoiceBox.setOnAction(e -> npcColorButton.fire());
+        npcChoiceBox.setOnAction(e -> npcCreateButton.fire());
         npcChoiceBox.setTooltip(new Tooltip("Select your preferred NPC type."));
-        npcColorButton.setOnAction(e -> selectedSprite = MapSprite.SpriteType.NPC);
-        npcColorButton.setTooltip(new Tooltip("Click to set NPC spawn location."));
-        voidColorButton.setOnAction(e -> selectedSprite = null);
-        voidColorButton.setTooltip(new Tooltip("Click on any shape to delete it."));
+        npcCreateButton.setOnAction(e -> selectedSprite = MapSprite.SpriteType.NPC);
+        npcCreateButton.setTooltip(new Tooltip("Click to set NPC spawn location."));
+
+        deleteEntityButton.setOnAction(e -> selectedSprite = null);
+        deleteEntityButton.setTooltip(new Tooltip("Click on any shape to delete it."));
+        deleteAllButton.setOnAction(e -> {
+            map = new Map();
+            repaint(paintCanvas.getGraphicsContext2D());
+        });
+        deleteAllButton.setTooltip(new Tooltip("Click to reset map."));
         virusColorButton.setOnAction(e -> selectedSprite = MapSprite.SpriteType.PLAYER_CHAR);
         virusColorButton.setTooltip(new Tooltip("Click to set virus spawn location."));
+
+        File root = new File(workingDirectory);
+        if (root.exists() && root.listFiles() != null) {
+            loadWorldChoiceBox.setItems(FXCollections.observableList(Arrays.stream(Objects.requireNonNull(root.listFiles())).map(File::getName).collect(Collectors.toList())));
+        } else {
+            loadWorldChoiceBox.setVisible(false);
+            loadWorldButton.setVisible(false);
+            loadWorldButton.setTooltip(new Tooltip("Click to load one of your worlds."));
+            loadWorldChoiceBox.setTooltip(new Tooltip("Select a world to load!"));
+        }
+
         saveButton.setOnAction(e -> {
             try {
-                String fs = System.getProperty("file.separator");
-                File file = new File("src" + fs + "app" + fs + "worlds" + fs + levelNameTextfield.getText());
+                File file = new File(workingDirectory + levelNameTextfield.getText());
                 if (levelNameTextfield.getText() != null && !levelNameTextfield.getText().isEmpty()) {
                     if (!file.exists()) {
                         exportSprites();
@@ -105,7 +141,6 @@ public class WorldBuilderController extends Controller {
                     statusLabel.setTextFill(ERRONEOUS_EXPORT_COLOR);
                     statusLabel.setText("Please choose a valid name!");
                 }
-
             } catch (IllegalStateException ex) {
                 statusLabel.setTextFill(ERRONEOUS_EXPORT_COLOR);
                 statusLabel.setText(ex.getMessage());
@@ -116,33 +151,56 @@ public class WorldBuilderController extends Controller {
                 statusLabel.setTextFill(ERRONEOUS_EXPORT_COLOR);
                 statusLabel.setText("Internal Error: Please check your world name");
             }
-
         });
         saveButton.setTooltip(new Tooltip("Save and export your map."));
+
         socialDistancingCheckbox.setTooltip(new Tooltip("NPCs will avoid each other."));
         increasedHygieneCheckbox.setTooltip(new Tooltip("NPCs will have a lower probability to get sick."));
         betterMedicineCheckbox.setTooltip(new Tooltip("NPCs will become healthy quicker."));
     }
 
     /**
-     * Handles the drawing logic and all mouse events.
-     * <p>
-     * Makes sure that no sprites overlap and only one {@link virusMapSprites} is present at a time.
+     * Is to be called immediately after the constructor.
+     * Initializes any options not customizable before {@link #initialize}.
      */
-    @SuppressWarnings("JavadocReference")
     public void armCanvas() {
         paintCanvas.setCursor(Cursor.CROSSHAIR);
-        wallColorButton.requestFocus();
+        wallCreateButton.requestFocus();
 
         // makes sure that canvas is scaled correctly and follows agreed upon format
         assert paintCanvas.getWidth() / paintCanvas.getHeight() == 16.0 / 9.0 : "Canvas scaling does not fit format of 16/9";
         map.setScaleFactor((double) Constants.STANDARD_MAP_SIZE_X / paintCanvas.getWidth());
 
         final GraphicsContext graphicsContext = paintCanvas.getGraphicsContext2D();
-        // initializes empty map
-        graphicsContext.setFill(VOID_COLOR);
-        graphicsContext.fillRect(0, 0, paintCanvas.getWidth(), paintCanvas.getHeight());
 
+        if (tmpFileLoaded) {
+            loadWorldParameters();
+        }
+
+        loadWorldButton.setOnAction(e -> {
+            if (!loadWorldChoiceBox.getSelectionModel().isEmpty()) {
+                String worldName = loadWorldChoiceBox.getSelectionModel().selectedItemProperty().getValue();
+                try {
+                    map = Map.deserialize(workingDirectory + worldName);
+                    loadWorldParameters();
+                } catch (IOException | ClassNotFoundException ioException) {
+                    ioException.printStackTrace();
+                }
+                repaint(graphicsContext);
+            }
+        });
+
+        handleMouseEvents(graphicsContext);
+        repaint(graphicsContext);
+    }
+
+    /**
+     * Handles the drawing logic and all mouse events.
+     * Makes sure that no {@link MapSprite} overlap and only one {@link MapPlayerChar} is present at a time.
+     *
+     * @param graphicsContext: Where stuff is drawn.
+     */
+    private void handleMouseEvents(GraphicsContext graphicsContext) {
         paintCanvas.setOnMousePressed(mouseEvent -> {
             statusLabel.setText("");
             int subSampledX = subSample(mouseEvent.getX());
@@ -301,27 +359,53 @@ public class WorldBuilderController extends Controller {
         if (levelNameTextfield.getText() == null || levelNameTextfield.getText().equals("")) {
             throw new IllegalStateException("Level name must be set.");
         }
+        setWorldParameters();
+        Map.serialize(map, workingDirectory + map.getMapName());
+        mapExported = true;
+
+        File tmpFile = new File(TMP_WORLD_PATH);
+        if (tmpFile.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            tmpFile.delete();
+        }
+    }
+
+    /**
+     * Meant to be called before saving a map.
+     * Saves checkboxes and name to map.
+     */
+    private void setWorldParameters() {
         map.setMapName(levelNameTextfield.getText());
         map.setSocialDistancing(socialDistancingCheckbox.isSelected());
         map.setBetterMedicine(betterMedicineCheckbox.isSelected());
         map.setIncreasedHygiene(increasedHygieneCheckbox.isSelected());
-        String fs = System.getProperty("file.separator");
-        Map.serialize(map, "src" + fs + "app" + fs + "worlds" + fs + "ownWorlds" + fs + map.getMapName());
-        System.out.println("Level Name: " + levelNameTextfield.getCharacters());
-        System.out.println("Social Distancing: " + socialDistancingCheckbox.isSelected());
-        System.out.println("Increased Hygiene: " + increasedHygieneCheckbox.isSelected());
-        System.out.println("Better Medicine: " + betterMedicineCheckbox.isSelected());
+    }
 
-        if (map.getWalls().size() > 0) {
-            System.out.println("Walls:");
-            map.getWalls().forEach(mapSprites -> System.out.println(mapSprites.toString()));
+    /**
+     * Meant to be called after loading a map.
+     * Restores checkboxes and name from map.
+     */
+    private void loadWorldParameters() {
+        levelNameTextfield.setText(map.getMapName());
+        socialDistancingCheckbox.setSelected(map.isSocialDistancing());
+        betterMedicineCheckbox.setSelected(map.isBetterMedicine());
+        increasedHygieneCheckbox.setSelected(map.isIncreasedHygiene());
+    }
+
+    /**
+     * Saves any unsaved changes in a tmp-File before returning to the previous scene.
+     * This file is reloaded upon opening the WorldBuilder.
+     */
+    void returnToPreviousScene() {
+        if (!mapExported) {
+            setWorldParameters();
+            try {
+                Map.serialize(map, TMP_WORLD_PATH);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        System.out.println("NPCs:");
-        map.getNpcs().forEach(mapSprites -> System.out.println(mapSprites.toString()));
-
-        System.out.println("Virus:");
-        System.out.println(map.getPlayer().toString());
-
+        super.returnToPreviousScene();
     }
 
 }

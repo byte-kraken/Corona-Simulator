@@ -7,7 +7,6 @@ import app.exceptions.ModelNotSetException;
 import app.exceptions.StartScreenNotInitializedException;
 import app.model.SinglePlayerModel;
 import javafx.animation.AnimationTimer;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -32,32 +31,23 @@ import static app.util.Constants.STANDARD_MAP_SIZE_Y;
 /**
  * Controller {@link Controller} for the SinglePlayerMode.
  * <p>
- * Controls the virus, NPCs and the main logic.
+ * Controls the {@link app.classes.gameEntitys.PlayerChar}, {@link NPC} and the main logic.
  */
 public class SinglePlayerMainController extends Controller {
-    //FXMl Fields
     @FXML
     private ResourceBundle resources;
-
     @FXML
     private URL location;
-
     @FXML
     private AnchorPane mainAnchorPane;
-
     @FXML
     private Label nrInfectedLabel;
-
     @FXML
     private Button toMainMenuButton;
-
     @FXML
     private Canvas gameCanvas;
 
-    //FXM Fields End
-    //Regular fields
-
-    //Input Buffer
+    // Input Buffer
     private ArrayList<String> input;
 
     private SinglePlayerModel siPModel;
@@ -70,70 +60,46 @@ public class SinglePlayerMainController extends Controller {
     private boolean gameStarted = false;
 
 
-
-
     public SinglePlayerMainController() {
         super();
     }
 
     public void initialize() {
-
-        // Assertions Start
-
         assert mainAnchorPane != null : "fx:id=\"mainAnchorPane\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert nrInfectedLabel != null : "fx:id=\"nrInfectedLabel\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert toMainMenuButton != null : "fx:id=\"toMainMenuButton\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
         assert gameCanvas != null : "fx:id=\"gameCanvas\" was not injected: check your FXML file 'singlePlayerMainUI.fxml'.";
 
-        //Assertions End
-        //Set Sizes Start
-
-        //Set Size of Canvas
+        // Set Size of Canvas
         mainAnchorPane.setMinSize(STANDARD_MAP_SIZE_X, STANDARD_MAP_SIZE_Y);
-        mainAnchorPane.setMaxSize(STANDARD_MAP_SIZE_X,STANDARD_MAP_SIZE_Y);
+        mainAnchorPane.setMaxSize(STANDARD_MAP_SIZE_X, STANDARD_MAP_SIZE_Y);
 
         gameCanvas.setWidth(STANDARD_MAP_SIZE_X);
         gameCanvas.setHeight(STANDARD_MAP_SIZE_Y);
 
+        // Regular fields initialization
+        input = new ArrayList<>();
 
-
-
-
-        //Set Sizes End
-
-        //Regular fields initialization
-
-        input = new ArrayList<String>();
-
-        //Regular fields initialization End
-
-        //Action Handlers
+        // Action Handlers
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
         toMainMenuButton.setFocusTraversable(false); //needs to be set for all focusable elements in the scene, otherwise key detection does not work
-
 
 
         //Action Handlers END
     }
 
     public void setKeyEventHandler() {
-        getPrimaryStage().getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                String code = keyEvent.getCode().toString();
-                if (!input.contains(code))
-                    input.add(code);
-            }
+        getPrimaryStage().getScene().setOnKeyPressed(keyEvent -> {
+            String code = keyEvent.getCode().toString();
+            if (!input.contains(code))
+                input.add(code);
         });
 
-
-        getPrimaryStage().getScene().setOnKeyReleased(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                String code = keyEvent.getCode().toString();
-                input.remove(code);
-            }
+        getPrimaryStage().getScene().setOnKeyReleased(keyEvent -> {
+            String code = keyEvent.getCode().toString();
+            input.remove(code);
         });
+
         getPrimaryStage().getScene().addEventFilter(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode() == KeyCode.SPACE) {
                 if (!gameStarted) {
@@ -159,10 +125,8 @@ public class SinglePlayerMainController extends Controller {
         if (!modelSet) {
             throw new ModelNotSetException();
         }
-        //Set Full Screen
-
+        // set Full Screen
         getPrimaryStage().setFullScreen(true);
-
 
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
 
@@ -192,12 +156,11 @@ public class SinglePlayerMainController extends Controller {
         gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
 
 
-
         Iterator<NPC> npcSetVeloIter = siPModel.getNPC_Iterator();
         while (npcSetVeloIter.hasNext()) {
             NPC npc = npcSetVeloIter.next();
             npc.setVelocity(ThreadLocalRandom.current().nextDouble(-100, 100)
-                    ,ThreadLocalRandom.current().nextDouble(-100, 100));
+                    , ThreadLocalRandom.current().nextDouble(-100, 100));
             //npc.setVelocity(0,-10);
         }
 
@@ -259,14 +222,12 @@ public class SinglePlayerMainController extends Controller {
                 }
 
 
-
                 //Collision Detection End
                 //Update Game End
                 //Render Start
                 gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
 
                 siPModel.getPlayer().render(gc);
-
 
 
                 //drawDebugGrid(gc);
@@ -291,10 +252,10 @@ public class SinglePlayerMainController extends Controller {
     /**
      * Checks if player pressed key and adds velocity to Player model accordingly
      */
-    private void applyPlayerInputs(){
+    private void applyPlayerInputs() {
         siPModel.getPlayer().setVelocity(0, 0);
         int playerSpeed = 200;
-        if(input.contains("CONTROL")){
+        if (input.contains("CONTROL")) {
             playerSpeed = 400;
         }
 
@@ -309,15 +270,15 @@ public class SinglePlayerMainController extends Controller {
     }
 
 
-    private void drawDebugGrid(GraphicsContext gc){
-        for(int x=0;x<STANDARD_MAP_SIZE_X;x+=100){
-            gc.fillText(Integer.toString(x),x,50);
-            gc.strokeLine(x,0,x,STANDARD_MAP_SIZE_Y);
+    private void drawDebugGrid(GraphicsContext gc) {
+        for (int x = 0; x < STANDARD_MAP_SIZE_X; x += 100) {
+            gc.fillText(Integer.toString(x), x, 50);
+            gc.strokeLine(x, 0, x, STANDARD_MAP_SIZE_Y);
         }
 
-        for(int y=0;y<STANDARD_MAP_SIZE_Y;y+=100){
-            gc.fillText(Integer.toString(y),10,y);
-            gc.strokeLine(0,y,STANDARD_MAP_SIZE_X,y);
+        for (int y = 0; y < STANDARD_MAP_SIZE_Y; y += 100) {
+            gc.fillText(Integer.toString(y), 10, y);
+            gc.strokeLine(0, y, STANDARD_MAP_SIZE_X, y);
         }
     }
 }

@@ -50,7 +50,6 @@ public class NPC extends MovingSprite {
     }
 
     public void wallCollision(double elapsedTime, Wall wall) {
-        //TODO Make Vector Reflection instead of random shit
 
         Bounds wallBounds = wall.getBoundaries()[0];
         if (npcChar.getCenterX() < wallBounds.getMinX() || npcChar.getCenterX() > wallBounds.getMaxX()) {
@@ -60,21 +59,6 @@ public class NPC extends MovingSprite {
             directVec.y *= -1;
         }
         update(elapsedTime);
-
-
-//        velocityX = velocityX * -1;
-//        velocityY = velocityY * -1;
-//        double angleChange = ThreadLocalRandom.current().nextDouble(-30, 30);
-//        velocityX += angleChange;
-//        velocityY -= angleChange;
-//
-//        if (velocityX > 70) {
-//            velocityX /= 2;
-//        }
-//        if (velocityY > 70) {
-//            velocityY /= 2;
-//        }
-
     }
 
     public boolean isInfected() {

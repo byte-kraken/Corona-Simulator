@@ -6,7 +6,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -27,12 +33,33 @@ public class MainMenuController {
     private Button worldBuilderButton;
     @FXML
     private Button exitButton;
-
+    @FXML
+    private Button heading;
+    @FXML
+    private GridPane gridPane;
+    @FXML
+    private VBox vBox;
+    @FXML
+    private HBox hBox;
 
     public MainMenuController() { //loaded from FXMLLoader
     }
 
     void armMainMenuButtons(Stage primaryStage) {
+        gridPane.setStyle("-fx-background-color: black");
+        vBox.setStyle("-fx-background-color: black");
+        hBox.setStyle("-fx-background-color: black");
+        singlePlayerButton.setStyle("-fx-background-color: transparent");
+        worldBuilderButton.setStyle("-fx-background-color: transparent");
+        exitButton.setStyle("-fx-background-color: transparent");
+        heading.setStyle("-fx-background-color: transparent");
+        singlePlayerButton.setTooltip(new Tooltip("Click to Play"));
+        worldBuilderButton.setTooltip(new Tooltip("Worldbuilder"));
+        exitButton.setTooltip(new Tooltip("Exit"));
+        singlePlayerButton.setGraphic(new ImageView(new Image("file:imgs/Play.png", 400, 400, false, false)));
+        worldBuilderButton.setGraphic(new ImageView(new Image("file:imgs/Globe.png", 400, 400, false, false)));
+        exitButton.setGraphic(new ImageView(new Image("file:imgs/Exit.png", 300, 400, false, false)));
+        heading.setGraphic(new ImageView(new Image("file:imgs/Heading.png", 1500, 200, false, false)));
         setSinglePlayerMainScene(primaryStage);
         setWorldBuilderScene(primaryStage);
 

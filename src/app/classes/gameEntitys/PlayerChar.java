@@ -27,7 +27,8 @@ public class PlayerChar extends MovingSprite {
     }
 
     public void wallCollision(double time) {
-        update(time * -1);
+        directVec.negate();
+        update(time);
     }
 
     public void setImage(String filename) {
@@ -41,8 +42,8 @@ public class PlayerChar extends MovingSprite {
     @Override
     public void update(double time) {
         super.update(time);
-        player.setCenterX(positionX);
-        player.setCenterY(positionY);
+        player.setCenterX(position.x);
+        player.setCenterY(position.y);
     }
 
     @Override

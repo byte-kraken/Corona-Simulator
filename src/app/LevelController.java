@@ -108,14 +108,14 @@ public class LevelController extends Controller {
         MainMenuController.loadScene(loader, stage);
         stage.setTitle("Corona Simulator");
         SinglePlayerMainController controller = loader.getController();
-        SinglePlayerModel standardTestModel = new SinglePlayerModel();
+        SinglePlayerModel loadedModel = new SinglePlayerModel();
         try {
-            standardTestModel.loadEntitiesFromMapInModel(Map.deserialize(path));
+            loadedModel.loadEntitiesFromMapInModel(Map.deserialize(path));
         } catch (IOException | ClassNotFoundException ioException) {
             ioException.printStackTrace();
         }
         controller.setKeyEventHandler();
-        controller.setSinglePlayerModel(standardTestModel);
+        controller.setSinglePlayerModel(loadedModel);
         controller.initStartScreen();
     }
 

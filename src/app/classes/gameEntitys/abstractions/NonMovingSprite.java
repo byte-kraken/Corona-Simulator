@@ -3,18 +3,24 @@ package app.classes.gameEntitys.abstractions;
 import javafx.geometry.Bounds;
 import javafx.scene.canvas.GraphicsContext;
 
+import javax.vecmath.Vector2d;
+
 public abstract class NonMovingSprite implements SpriteInterface {
-    protected double positionX;
-    protected double positionY;
+    //protected double positionX;
+    //protected double positionY;
+
+    protected Vector2d position;
 
     public NonMovingSprite(double positionX, double positionY) {
-        this.positionX = positionX;
-        this.positionY = positionY;
+//        this.positionX = positionX;
+//        this.positionY = positionY;
+
+        position = new Vector2d(positionX, positionY);
     }
 
     public void setPosition(double x, double y) {
-        positionX = x;
-        positionY = y;
+        position.x = x;
+        position.y = y;
     }
 
     public void setVelocity(double x, double y) {
@@ -45,6 +51,6 @@ public abstract class NonMovingSprite implements SpriteInterface {
     }
 
     public String toString() {
-        return " Position: [" + positionX + "," + positionY + "]";
+        return " Position: [" + position.x + "," + position.y + "]";
     }
 }

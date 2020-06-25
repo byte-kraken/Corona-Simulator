@@ -6,6 +6,7 @@ import app.classes.gameEntitys.PlayerChar;
 import app.classes.gameEntitys.Wall;
 import app.classes.mapEntities.MapNPC;
 import app.classes.mapEntities.MapWall;
+import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -17,9 +18,22 @@ public class SinglePlayerModel {
     private PlayerChar player;
     private NPC[] npcs;
     private Wall[] walls;
+    private SimpleIntegerProperty nrInfected;
 
     public SinglePlayerModel() {
+        nrInfected = new SimpleIntegerProperty(0);
+    }
 
+    public SimpleIntegerProperty getNrInfected() {
+        return nrInfected;
+    }
+
+    public synchronized void addInfected(){
+        nrInfected.setValue(nrInfected.getValue()+1);
+    }
+
+    public boolean allNPCsAreInfected(){
+        return nrInfected.getValue()>=npcs.length;
     }
 
     public PlayerChar getPlayer() {
@@ -33,6 +47,8 @@ public class SinglePlayerModel {
     public Iterator<Wall> getWall_Iterator() {
         return Arrays.stream(walls).iterator();
     }
+
+
 
     public void loadEntitiesFromMapInModel(Map map) {
         npcs = new NPC[map.getNpcs().size()];

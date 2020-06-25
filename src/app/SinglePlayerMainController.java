@@ -85,6 +85,9 @@ public class SinglePlayerMainController extends Controller {
         toMainMenuButton.setFocusTraversable(false); //needs to be set for all focusable elements in the scene, otherwise key detection does not work
 
 
+
+
+
         //Action Handlers END
     }
 
@@ -125,8 +128,16 @@ public class SinglePlayerMainController extends Controller {
         if (!modelSet) {
             throw new ModelNotSetException();
         }
+
+        toMainMenuButton.setStyle("-fx-border-width: 1;\n" +
+                "    -fx-background-radius: 0;\n" +
+                "    -fx-background-color: transparent;\n" +
+                "    -fx-font-family:\"Segoe UI\", Helvetica, Arial, sans-serif;\n" +
+                "    -fx-font-size: 3em; /* 12 */\n");
+
+        nrInfectedLabel.textProperty().bind(siPModel.getNrInfected().asString());
+
         // set Full Screen
-        getPrimaryStage().setFullScreen(true);
 
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
 
@@ -198,8 +209,6 @@ public class SinglePlayerMainController extends Controller {
 
                 //Collision Detection Start
 
-
-                //TODO Collision Detection Properly
                 wallIter = siPModel.getWall_Iterator();
                 while (wallIter.hasNext()) {
                     Wall wall = wallIter.next();
@@ -208,19 +217,42 @@ public class SinglePlayerMainController extends Controller {
                     }
                 }
 
+                //NPC Wall detection
                 npcIterator = siPModel.getNPC_Iterator();
                 while (npcIterator.hasNext()) {
                     NPC npc = npcIterator.next();
+
+
                     wallIter = siPModel.getWall_Iterator();
                     while (wallIter.hasNext()) {
                         Wall wall = wallIter.next();
                         if (npc.intersects(wall)) {
-                            npc.wallCollision(elapsedTime);
+                            npc.wallCollision(elapsedTime, wall);
                         }
                     }
                     npc.update(elapsedTime);
                 }
+                //NPC (infection detection) Player and other NPC collision detection and
+                npcIterator = siPModel.getNPC_Iterator();
+                while (npcIterator.hasNext()){
+                    NPC npc = npcIterator.next();
+                    //Player Collision
+                    if(!npc.isInfected() && npc.intersects(siPModel.getPlayer())){
+                        npc.setInfected(true);
+                        siPModel.addInfected();
+                    }
+                    Iterator<NPC> otherNPCs = siPModel.getNPC_Iterator();
+                    while (otherNPCs.hasNext()){
+                        NPC otherNPC = otherNPCs.next();
+                        if( otherNPC != npc && !npc.isInfected()  && otherNPC.isInfected()){
+                            if(npc.intersects(otherNPC)){
+                                npc.setInfected(true);
+                                siPModel.addInfected();
+                            }
+                        }
+                    }
 
+                }
 
                 //Collision Detection End
                 //Update Game End
@@ -244,9 +276,15 @@ public class SinglePlayerMainController extends Controller {
                 }
                 //Render End
 
+                if(siPModel.allNPCsAreInfected()){
+                    gc.setFill(Color.GREEN);
+                    gc.fillText("You infected all inhabitants of this world. Are you not ashamed of yourself?", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) - 50);
+                    gc.fillText("Press Cancel to return and infect more innocent circles.", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) );
+                    this.stop();
+                }
             }
         }.start();
-
+        
     }
 
     /**

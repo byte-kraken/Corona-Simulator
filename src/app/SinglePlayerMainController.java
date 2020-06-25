@@ -293,9 +293,6 @@ public class SinglePlayerMainController extends Controller {
                     label.getStylesheets().add("file:///" + fi.getAbsolutePath().replace("\\", "/"));
                     label.setText("You infected all inhabitants of this world. Are you not ashamed of yourself? \n Press Cancel to return and infect more innocent circles.");
                     label.setStyle("-fx-font-family: bloody");
-                    /*gc.setFill(Color.GREEN);
-                    gc.fillText("You infected all inhabitants of this world. Are you not ashamed of yourself?", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) - 50);
-                    gc.fillText("Press Cancel to return and infect more innocent circles.", (gameCanvas.getWidth() / 2) - 100, (gameCanvas.getHeight() / 2) );*/
                     this.stop();
                 }
             }

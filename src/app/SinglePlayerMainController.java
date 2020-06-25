@@ -215,10 +215,17 @@ public class SinglePlayerMainController extends Controller {
                     while (wallIter.hasNext()) {
                         Wall wall = wallIter.next();
                         if (npc.intersects(wall)) {
-                            npc.wallCollision(elapsedTime);
+                            npc.wallCollision(elapsedTime, wall);
                         }
                     }
                     npc.update(elapsedTime);
+                }
+
+
+                npcIterator = siPModel.getNPC_Iterator();
+                while (npcIterator.hasNext()) {
+                    NPC npc = npcIterator.next();
+                    npc.render(gc);
                 }
 
 

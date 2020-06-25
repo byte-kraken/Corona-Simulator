@@ -7,8 +7,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 /**
  * Randomly moves around the playing-field, waiting to be infected by {@link PlayerChar}
  * <p>
@@ -51,20 +49,31 @@ public class NPC extends MovingSprite {
                 npcChar.getBoundsInLocal()};
     }
 
-    public void wallCollision(double elapsedTime) {
+    public void wallCollision(double elapsedTime, Wall wall) {
         //TODO Make Vector Reflection instead of random shit
-        velocityX = velocityX * -1;
-        velocityY = velocityY * -1;
-        double angleChange = ThreadLocalRandom.current().nextDouble(-30, 30);
-        velocityX += angleChange;
-        velocityY -= angleChange;
 
-        if (velocityX > 70) {
-            velocityX /= 2;
+        Bounds wallBounds = wall.getBoundaries()[0];
+        if (npcChar.getCenterX() < wallBounds.getMinX() || npcChar.getCenterX() > wallBounds.getMaxX()) {
+            directVec.x *= -1;
         }
-        if (velocityY > 70) {
-            velocityY /= 2;
+        if (npcChar.getCenterY() < wallBounds.getMinY() || npcChar.getCenterY() > wallBounds.getMaxY()) {
+            directVec.y *= -1;
         }
+        update(elapsedTime);
+
+
+//        velocityX = velocityX * -1;
+//        velocityY = velocityY * -1;
+//        double angleChange = ThreadLocalRandom.current().nextDouble(-30, 30);
+//        velocityX += angleChange;
+//        velocityY -= angleChange;
+//
+//        if (velocityX > 70) {
+//            velocityX /= 2;
+//        }
+//        if (velocityY > 70) {
+//            velocityY /= 2;
+//        }
 
     }
 

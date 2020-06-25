@@ -1,5 +1,6 @@
 package app;
 
+import app.util.UtilMethods;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,10 +24,12 @@ public class Main extends Application {
         final Parent root = loader.load();
         MainMenuController mainMenuController = loader.getController();
         primaryStage.setTitle("Main Menu");
+        UtilMethods.adaptStageSizeToScreenResolution(primaryStage);
+        primaryStage.setFullScreenExitHint("");
         primaryStage.setScene(new Scene(root, primaryStage.getWidth(), primaryStage.getHeight()));
-        primaryStage.show();
         // Controller cannot use parameters because load uses empty constructor. Scenes have to be loaded in afterwards, sadly.
         mainMenuController.armMainMenuButtons(primaryStage);
+        primaryStage.show();
     }
 
 

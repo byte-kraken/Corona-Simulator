@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -28,33 +27,13 @@ import static app.util.Constants.OWN_WORLDS_FOLDER_PATH;
 
 public class LevelController extends Controller {
     @FXML
-    private ScrollPane ownWorlds;
+    private ScrollPane ownWorlds, levels;
     @FXML
-    private ScrollPane levels;
+    private Button backToMainMenu, levelButton, ownWorldButton;
     @FXML
-    private Button backToMainMenu;
+    private ImageView careerView, sandBoxView;
     @FXML
-    private ImageView careerView;
-    @FXML
-    private ImageView sandBoxView;
-    @FXML
-    private Button levelButton;
-    @FXML
-    private TitledPane level;
-    @FXML
-    private TitledPane ownWorld;
-    @FXML
-    private Button ownWorldButton;
-    @FXML
-    private AnchorPane levelAnchorPane;
-    @FXML
-    private AnchorPane ownWorldAnchorPane;
-    @FXML
-    private GridPane gridPane;
-    @FXML
-    private VBox vBox;
-    @FXML
-    private AnchorPane anchorPane;
+    private TitledPane level, ownWorld;
 
     private final ArrayList<Button> ownWorldButtons = new ArrayList<>();
     private final ArrayList<Button> levelButtons = new ArrayList<>();
@@ -64,6 +43,9 @@ public class LevelController extends Controller {
         super();
     }
 
+    /**
+     * Loads and arms all FXML elements, where possible.
+     */
     public void initialize() {
         levelButton.setStyle("-fx-background-color: transparent");
         ownWorldButton.setStyle("-fx-background-color: transparent");
@@ -102,6 +84,10 @@ public class LevelController extends Controller {
         backToMainMenu.setFocusTraversable(false);
     }
 
+    /**
+     * Is to be called immediately after the constructor.
+     * Initializes any options not customizable before {@link #initialize}.
+     */
     public void armButtons() {
         levelButtons.forEach(b -> {
             b.setMinSize(850, 230);
@@ -113,6 +99,9 @@ public class LevelController extends Controller {
         });
     }
 
+    /**
+     * Helper method for creating various scenes and passing required parameters.
+     */
     private void loadStage(String path) {
         final Stage stage = getPrimaryStage();
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("singlePlayerMainUI.fxml"));
@@ -130,7 +119,10 @@ public class LevelController extends Controller {
         controller.initStartScreen();
     }
 
-
+    /**
+     * Is to be called immediately after {@link #initialize}.
+     * Load buttons dynamically in the scrollPane.
+     */
     private void createButtons(File folder, ArrayList<Button> arrayList, ScrollPane worlds) {
         GridPane buttonGridPane = new GridPane();
         Font font = new Font("System", 30);

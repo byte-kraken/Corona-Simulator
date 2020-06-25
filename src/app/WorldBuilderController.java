@@ -88,8 +88,11 @@ public class WorldBuilderController extends Controller {
      * Loads and arms all FXML elements, where possible.
      */
     public void initialize() {
+        npcChoiceBox.setStyle("-fx-font-size:16px");
+        loadWorldChoiceBox.setStyle("-fx-font-size:16px");
         toMainMenuButton.setOnAction(e -> returnToPreviousScene());
 
+        statusLabel.setStyle("-fx-font-size:16px");
         statusLabel.setTextFill(NEUTRAL_MESSAGE_COLOR);
         statusLabel.setText("Use the controls at the top to draw and name your level. Press " + saveButton.getText() + " when you are done!");
 

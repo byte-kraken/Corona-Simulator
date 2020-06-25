@@ -24,6 +24,7 @@ public class Main extends Application {
         MainMenuController mainMenuController = loader.getController();
         primaryStage.setTitle("Main Menu");
         primaryStage.setScene(new Scene(root, primaryStage.getWidth(), primaryStage.getHeight()));
+        primaryStage.setFullScreen(true);
         primaryStage.show();
         // Controller cannot use parameters because load uses empty constructor. Scenes have to be loaded in afterwards, sadly.
         mainMenuController.armMainMenuButtons(primaryStage);

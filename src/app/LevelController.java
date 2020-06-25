@@ -27,23 +27,13 @@ import static app.util.Constants.OWN_WORLDS_FOLDER_PATH;
 
 public class LevelController extends Controller {
     @FXML
-    private ScrollPane ownWorlds;
+    private ScrollPane ownWorlds, levels;
     @FXML
-    private ScrollPane levels;
+    private Button backToMainMenu, levelButton, ownWorldButton;
     @FXML
-    private Button backToMainMenu;
+    private ImageView careerView, sandBoxView;
     @FXML
-    private Button levelButton;
-    @FXML
-    private Button ownWorldButton;
-    @FXML
-    private ImageView careerView;
-    @FXML
-    private ImageView sandBoxView;
-    @FXML
-    private TitledPane level;
-    @FXML
-    private TitledPane ownWorld;
+    private TitledPane level, ownWorld;
 
     private final ArrayList<Button> ownWorldButtons = new ArrayList<>();
     private final ArrayList<Button> levelButtons = new ArrayList<>();

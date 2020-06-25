@@ -1,6 +1,7 @@
 package app;
 
 import app.model.Model;
+import app.util.UtilMethods;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -85,7 +86,6 @@ public class MainMenuController {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("LevelUI.fxml"));
             loadScene(loader, primaryStage);
             primaryStage.setTitle("Level select ");
-            primaryStage.setFullScreen(true);
             LevelController controller = loader.getController();
             controller.armButtons();
         });
@@ -99,7 +99,6 @@ public class MainMenuController {
             final FXMLLoader loader = new FXMLLoader(getClass().getResource("worldBuilder.fxml"));
             loadScene(loader, primaryStage);
             primaryStage.setTitle("World Builder");
-            primaryStage.setFullScreen(true);
             WorldBuilderController controller = loader.getController();
             controller.armCanvas(); //canvas has to be loaded after scene was created
         });
@@ -123,6 +122,7 @@ public class MainMenuController {
         Scene previousScene = primaryStage.getScene();
         controller.setPreviousScene(previousScene);
         primaryStage.setScene(new Scene(root));
+        UtilMethods.adaptStageSizeToScreenResolution(primaryStage);
     }
 
     private void closeStage(Stage primaryStage) {

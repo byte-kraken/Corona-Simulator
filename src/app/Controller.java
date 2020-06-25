@@ -1,6 +1,7 @@
 package app;
 
 import app.model.Model;
+import app.util.UtilMethods;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -35,6 +36,6 @@ class Controller {
 
     void returnToPreviousScene() {
         primaryStage.setScene(previousScene);
-        primaryStage.setFullScreen(true);
+        UtilMethods.adaptStageSizeToScreenResolution(primaryStage);
     }
 }

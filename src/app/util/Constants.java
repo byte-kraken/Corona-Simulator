@@ -12,5 +12,6 @@ public final class Constants {
     private static final String fs = System.getProperty("file.separator");
     public static final String LEVELS_FOLDER_PATH = "worlds" + fs + "levels" + fs;
     public static final String OWN_WORLDS_FOLDER_PATH = "worlds" + fs + "ownWorlds" + fs;
-    public static final String TMP_WORLD_PATH = "worlds" + fs + "tmp" + fs + "tmp";
+    public static final String TMP_WORLD_FOLDER_PATH = "worlds" + fs + "tmp" + fs;
+    public static final String TMP_WORLD_PATH = TMP_WORLD_FOLDER_PATH + "tmp";
 }

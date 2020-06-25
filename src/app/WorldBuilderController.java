@@ -25,8 +25,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static app.util.Constants.OWN_WORLDS_FOLDER_PATH;
-import static app.util.Constants.TMP_WORLD_PATH;
+import static app.util.Constants.*;
 
 /**
  * Controller {@link Controller} for the WorldBuilder.
@@ -77,7 +76,6 @@ public class WorldBuilderController extends Controller {
                 loadedTmpMap = Map.deserialize(path);
                 tmpFileLoaded = true;
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
                 loadedTmpMap = new Map();
             }
         } else {
@@ -127,6 +125,11 @@ public class WorldBuilderController extends Controller {
 
         saveButton.setOnAction(e -> {
             try {
+                File wd = new File(workingDirectory);
+                if (!wd.exists()) {
+                    //noinspection ResultOfMethodCallIgnored
+                    wd.mkdir();
+                }
                 File file = new File(workingDirectory + levelNameTextfield.getText());
                 if (levelNameTextfield.getText() != null && !levelNameTextfield.getText().isEmpty()) {
                     if (!file.exists()) {
@@ -363,6 +366,7 @@ public class WorldBuilderController extends Controller {
         Map.serialize(map, workingDirectory + map.getMapName());
         mapExported = true;
 
+
         File tmpFile = new File(TMP_WORLD_PATH);
         if (tmpFile.exists()) {
             //noinspection ResultOfMethodCallIgnored
@@ -399,6 +403,11 @@ public class WorldBuilderController extends Controller {
     void returnToPreviousScene() {
         if (!mapExported) {
             setWorldParameters();
+            File td = new File(TMP_WORLD_FOLDER_PATH);
+            if (!td.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                td.mkdir();
+            }
             try {
                 Map.serialize(map, TMP_WORLD_PATH);
             } catch (IOException e) {

@@ -65,7 +65,6 @@ public class LevelController extends Controller {
     }
 
     public void initialize() {
-        File folderLevels = new File(LEVELS_FOLDER_PATH);
         levelButton.setStyle("-fx-background-color: transparent");
         ownWorldButton.setStyle("-fx-background-color: transparent");
         levelButton.setTooltip(new Tooltip("Click to play career mode"));
@@ -95,7 +94,7 @@ public class LevelController extends Controller {
             ownWorldButton.setVisible(false);
         });
 
-        File folderLevels = new File("src" + fs + "app" + fs + "worlds" + fs + "levels");
+        File folderLevels = new File(LEVELS_FOLDER_PATH);
         createButtons(folderLevels, levelButtons, levels);
         File folderOwnWorlds = new File(OWN_WORLDS_FOLDER_PATH);
         createButtons(folderOwnWorlds, ownWorldButtons, ownWorlds);
@@ -137,16 +136,18 @@ public class LevelController extends Controller {
         Font font = new Font("System", 30);
         int i = 0;
         Random rand = new Random();
-        for (File file : Objects.requireNonNull(folder.listFiles())) {
-            String worldName = file.getName();
-            Button ownWorldButton = new Button();
-            ownWorldButton.setText(worldName);
-            ownWorldButton.setFont(font);
-            String color = "-fx-background-color: rgb(" + rand.nextInt(255) + "," + rand.nextInt(255) + "," + rand.nextInt(255) + ")";
-            ownWorldButton.setStyle(color);
-            arrayList.add(ownWorldButton);
-            buttonGridPane.add(ownWorldButton, i % 2, i / 2);
-            i++;
+        if (folder.listFiles() != null) {
+            for (File file : Objects.requireNonNull(folder.listFiles())) {
+                String worldName = file.getName();
+                Button ownWorldButton = new Button();
+                ownWorldButton.setText(worldName);
+                ownWorldButton.setFont(font);
+                String color = "-fx-background-color: rgb(" + rand.nextInt(255) + "," + rand.nextInt(255) + "," + rand.nextInt(255) + ")";
+                ownWorldButton.setStyle(color);
+                arrayList.add(ownWorldButton);
+                buttonGridPane.add(ownWorldButton, i % 2, i / 2);
+                i++;
+            }
         }
         worlds.contentProperty().set(buttonGridPane);
         worlds.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);

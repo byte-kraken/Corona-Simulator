@@ -41,8 +41,8 @@ public class NPC extends MovingSprite {
     @Override
     public void update(double time) {
         super.update(time);
-        npcChar.setCenterX(positionX);
-        npcChar.setCenterY(positionY);
+        npcChar.setCenterX(position.x);
+        npcChar.setCenterY(position.y);
     }
 
     @Override

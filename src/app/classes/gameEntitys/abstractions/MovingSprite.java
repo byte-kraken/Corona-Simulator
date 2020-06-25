@@ -26,8 +26,8 @@ public abstract class MovingSprite extends NonMovingSprite {
 
     @Override
     public void update(double time) {
-        positionX += velocityX * time;
-        positionY += velocityY * time;
+        position.x += velocityX * time;
+        position.y += velocityY * time;
     }
 
     public abstract void render(GraphicsContext gc);
@@ -47,7 +47,7 @@ public abstract class MovingSprite extends NonMovingSprite {
     }
 
     public String toString() {
-        return " Position: [" + positionX + "," + positionY + "]"
+        return " Position: [" + position.x + "," + position.y + "]"
                 + " Velocity: [" + velocityX + "," + velocityY + "]";
     }
 }
